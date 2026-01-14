@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finance OS - V12 Compact</title>
+    <title>Finance OS - V14 Logic Fix</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
             height: 100vh; 
             display: flex; 
             overflow: hidden; 
-            font-size: 12px; /* Base size */
+            font-size: 12px;
         }
         
         .num { font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: -0.02em; }
@@ -65,8 +65,13 @@
         .page-title { font-weight: 700; font-size: 14px; color: var(--txt-main); }
         .controls { display: flex; align-items: center; gap: 12px; }
         
-        .date-ctrl { display: flex; align-items: center; background: var(--bg-app); border-radius: 6px; padding: 2px; border: 1px solid var(--border); }
-        .d-btn { width: 24px; height: 24px; border: none; background: white; border-radius: 4px; cursor: pointer; color: var(--txt-sec); display: grid; place-items: center; }
+        /* TC CONTROL FIX */
+        .tc-ctrl { display: flex; align-items: center; gap: 8px; background: var(--bg-app); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); height: 28px; }
+        .tc-label { font-size: 11px; font-weight: 600; color: var(--txt-sec); white-space: nowrap; }
+        .tc-input { width: 50px; border: none; background: transparent; font-weight: 700; color: var(--txt-main); font-family: inherit; font-size: 12px; outline: none; }
+
+        .date-ctrl { display: flex; align-items: center; background: var(--bg-app); border-radius: 6px; padding: 2px; border: 1px solid var(--border); height: 28px; }
+        .d-btn { width: 24px; height: 22px; border: none; background: white; border-radius: 4px; cursor: pointer; color: var(--txt-sec); display: grid; place-items: center; }
         .d-display { width: 110px; text-align: center; font-weight: 600; font-size: 11px; position: relative; }
         .d-picker { position: absolute; inset:0; opacity:0; cursor: pointer; width: 100%; }
 
@@ -80,7 +85,6 @@
         .view-container { padding: 20px 24px; overflow-y: auto; height: 100%; display: none; }
         .view-container.active { display: grid; }
 
-        /* OPS VIEW - COMPACTO */
         #view-ops { grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; align-items: start; }
         
         .panel { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; height: calc(100vh - 240px); overflow: hidden; }
@@ -88,7 +92,6 @@
         .ph-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; }
         .panel-body { flex: 1; overflow-y: auto; padding: 0; }
 
-        /* LIST ITEMS - ULTRA COMPACT */
         .tx-row { padding: 8px 16px; border-bottom: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center; transition: 0.1s; cursor: pointer; height: 48px; }
         .tx-row:hover { background: #F8FAFC; }
         .tx-row.executed { opacity: 0.5; filter: grayscale(1); }
@@ -102,7 +105,7 @@
         .tx-val { font-size: 12px; font-weight: 600; }
         .tx-bal { font-size: 9px; color: var(--txt-sec); margin-top: 1px; }
 
-        /* ALLOCATION - COMPACT */
+        /* ALLOCATION */
         .alloc-item { padding: 10px 16px; border-bottom: 1px solid var(--border); }
         .ai-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 11px; }
         .ai-bar-bg { height: 6px; background: #F1F5F9; border-radius: 3px; overflow: hidden; width: 100%; }
@@ -110,14 +113,8 @@
         .ai-details { margin-top: 8px; padding: 8px; background: #F8FAFC; border-radius: 6px; display: none; border: 1px dashed var(--border); }
         .alloc-item.open .ai-details { display: block; }
         
-        /* --- CHART VIEW --- */
-        #view-charts { 
-            grid-template-columns: 1fr 1fr; 
-            grid-template-rows: 320px; 
-            gap: 20px; 
-            align-content: start;
-        }
-        
+        /* CHART VIEW */
+        #view-charts { grid-template-columns: 1fr 1fr; grid-template-rows: 320px; gap: 20px; align-content: start; }
         .chart-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; }
         .cc-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; height: 20px; }
         .cc-title { font-weight: 700; font-size: 11px; color: var(--txt-sec); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -125,15 +122,12 @@
         .chart-content { display: flex; height: 100%; align-items: center; gap: 15px; }
         .canvas-area { flex: 1.2; position: relative; height: 100%; min-width: 0; }
         
-        /* CUSTOM LEGEND CON MONTOS */
         .custom-legend { flex: 1; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
         .cl-item { display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 4px 6px; border-bottom: 1px solid transparent; cursor: pointer; border-radius: 4px; }
         .cl-item:hover { background: #F8FAFC; }
-        
         .cl-left { display: flex; align-items: center; gap: 8px; }
         .cl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
         .cl-label { font-weight: 500; color: var(--txt-main); }
-        
         .cl-right { text-align: right; }
         .cl-amt { font-weight: 700; color: var(--txt-main); display: block; line-height: 1.1; }
         .cl-pct { font-size: 9px; color: var(--txt-sec); font-weight: 500; }
@@ -144,7 +138,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(46, 52, 64, 0.5); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
-        .modal { background: white; width: 400px; border-radius: 10px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; animation: fadeUp 0.2s ease-out; }
+        .modal { background: white; width: 420px; border-radius: 10px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; animation: fadeUp 0.2s ease-out; }
         @keyframes fadeUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .m-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; }
@@ -167,7 +161,11 @@
         .chip { padding: 5px 10px; border-radius: 4px; border: 1px solid var(--border); background: white; font-size: 11px; font-weight: 500; color: var(--txt-sec); cursor: pointer; transition: 0.1s; }
         .chip:hover { border-color: var(--txt-sec); }
         .chip.active { background: var(--sidebar); color: white; border-color: var(--sidebar); }
-        .chip.add { border-style: dashed; color: var(--primary); }
+        
+        /* New Sub-Chip for Concepts */
+        .sub-chip { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: #F8FAFC; font-size: 10px; font-weight: 500; color: var(--txt-main); cursor: pointer; transition: 0.1s; }
+        .sub-chip:hover { border-color: var(--primary); color: var(--primary); }
+        .sub-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         .btn-primary { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
         .btn-primary:hover { background: #4C566A; }
@@ -211,7 +209,11 @@
     <header class="header">
         <div class="page-title" id="pageTitle">Panel de Control</div>
         <div class="controls">
-            <div style="font-size:11px; font-weight:600; color:var(--txt-sec)">TC: <input type="number" id="usdRate" value="1200" onchange="updateTC()" style="width:45px; border:none; background:transparent; font-weight:700; color:var(--txt-main); font-family:inherit;"></div>
+            <div class="tc-ctrl">
+                <span class="tc-label">TC:</span>
+                <input type="number" id="usdRate" value="1200" onchange="updateTC()" class="tc-input">
+            </div>
+            
             <div class="date-ctrl">
                 <button class="d-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
                 <div class="d-display"><span id="monthTxt">...</span><input type="month" id="datePicker" class="d-picker" onchange="manualDate()"></div>
@@ -337,9 +339,9 @@
             </div>
 
             <div class="f-group">
-                <label class="f-label" id="lblDesc">Concepto / Detalle</label>
-                <input type="text" id="fDesc" class="f-input" list="dlConc" required placeholder="...">
-                <datalist id="dlConc"></datalist>
+                <label class="f-label" id="lblDesc">Concepto / Subcategoría</label>
+                <div class="chips-container" id="conceptBox" style="margin-bottom:8px;"></div>
+                <input type="text" id="fDesc" class="f-input" required placeholder="Selecciona o escribe nuevo...">
             </div>
 
             <div class="f-group" id="linkRow">
@@ -364,7 +366,19 @@
     const MONTHS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
     const PALETTE = ['#5E81AC','#81A1C1','#88C0D0','#A3BE8C','#BF616A','#D08770','#EBCB8B','#B48EAD'];
 
-    let appData = { txs: [], cats: { exp:['Esenciales','Deudas','Personal','Ahorro','Inversiones','Imprevistos'], inc:[] }, concepts: {}, rates: {} };
+    // Conceptos iniciales por categoria
+    let appData = { 
+        txs: [], 
+        cats: { exp:['Esenciales','Deudas','Personal','Ahorro','Inversiones','Imprevistos'], inc:[] }, 
+        concepts: {
+            'Esenciales': ['Luz/Gas', 'Supermercado', 'Internet', 'Alquiler'],
+            'Deudas': ['Tarjeta Visa', 'Préstamo', 'Tarjeta Master'],
+            'Personal': ['Salidas', 'Ropa'],
+            'Ingresos': ['Sueldo', 'Venta', 'Intereses'] // Pseudo-categoria para ingresos
+        }, 
+        rates: {} 
+    };
+    
     let currentDate = new Date(); currentDate.setDate(1);
     let editId=null, cExp=null, cInc=null, drillCat=null;
     const fmt = (n) => n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -373,7 +387,7 @@
     window.onload = () => { updateDateUI(); forceSync(); };
 
     async function forceSync() {
-        try { const r = await fetch(API_URL); appData = await r.json(); if(!appData.rates) appData.rates={}; loadMonthData(); } catch(e){ console.error(e); }
+        try { const r = await fetch(API_URL); appData = await r.json(); if(!appData.rates) appData.rates={}; if(!appData.concepts) appData.concepts={}; loadMonthData(); } catch(e){ console.error(e); }
     }
     
     async function saveData() {
@@ -488,10 +502,29 @@
     
     function resetCharts() { drillCat=null; loadMonthData(); }
 
-    /* --- FORM & LOGIC --- */
+    /* --- FORM & LOGIC UPDATED --- */
     function openModal(){ editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
     function closeModal(e){ if(!e || e.target.id=='modalOverlay' || e.target.tagName=='I') document.getElementById('modalOverlay').classList.remove('open'); }
     
+    // Renderiza botones de concepto segun la categoria seleccionada
+    function renderConcepts(catKey) {
+        const box = document.getElementById('conceptBox');
+        box.innerHTML = '';
+        const list = appData.concepts[catKey] || [];
+        
+        list.forEach(c => {
+            const el = document.createElement('div');
+            el.className = 'sub-chip';
+            el.innerText = c;
+            el.onclick = () => {
+                document.getElementById('fDesc').value = c;
+                document.querySelectorAll('.sub-chip').forEach(x => x.classList.remove('active'));
+                el.classList.add('active');
+            };
+            box.appendChild(el);
+        });
+    }
+
     function setType(t){
         document.getElementById('fType').value=t;
         document.getElementById('btnExp').className=`ts-btn ${t=='exp'?'active exp':''}`;
@@ -506,26 +539,42 @@
             const cats = appData.cats.exp && appData.cats.exp.length ? appData.cats.exp : ['Esenciales','Deudas','Personal','Ahorro'];
             cats.forEach(c=>{
                 const el=document.createElement('div'); el.className='chip'; el.innerText=c;
-                el.onclick=()=>selectCat(c,el); box.appendChild(el);
+                el.onclick=()=>{
+                    selectCat(c, el);
+                    renderConcepts(c); // Cargar conceptos de esta categoria
+                }; 
+                box.appendChild(el);
             });
+            // Boton + Categoria
             const add=document.createElement('div'); add.className='chip add'; add.innerText='+';
             add.onclick=()=>{const n=prompt('Nueva Categoría'); if(n){ if(!appData.cats.exp)appData.cats.exp=[]; appData.cats.exp.push(n); saveData(); setType('exp'); }};
             box.appendChild(add);
+
             document.getElementById('linkRow').style.display='block';
             renderLinkOpts();
             document.getElementById('lblDesc').innerText = "Concepto / Subcategoría";
+            document.getElementById('conceptBox').style.display = 'flex';
+            
+            // Limpiar seleccion actual
+            document.getElementById('fCat').value = '';
+            document.getElementById('conceptBox').innerHTML = ''; // Limpia conceptos hasta que elija categoria
+            
         } else {
+            // MODO INGRESO
             catRow.style.display = 'none';
-            document.getElementById('fCat').value = 'General';
+            document.getElementById('fCat').value = 'Ingresos'; // Categoria interna
             document.getElementById('linkRow').style.display='none';
-            document.getElementById('lblDesc').innerText = "Concepto / Fuente";
+            document.getElementById('lblDesc').innerText = "Fuente de Ingreso";
+            document.getElementById('conceptBox').style.display = 'flex';
+            renderConcepts('Ingresos'); // Cargar conceptos de ingresos
         }
-
-        const dl=document.getElementById('dlConc'); dl.innerHTML='';
-        Object.values(appData.concepts).flat().forEach(c=>dl.appendChild(new Option(c)));
     }
 
-    function selectCat(c, el){ document.getElementById('fCat').value=c; document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); if(el) el.classList.add('active'); }
+    function selectCat(c, el){ 
+        document.getElementById('fCat').value=c; 
+        document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); 
+        if(el) el.classList.add('active'); 
+    }
 
     function renderLinkOpts(sel){
         const s=document.getElementById('fLink'); s.innerHTML='<option value="">-- Sin Asignar --</option>';
@@ -541,8 +590,8 @@
         e.preventDefault();
         let cat=document.getElementById('fCat').value;
         const type = document.getElementById('fType').value;
-        if(type === 'exp' && !cat) return alert('Selecciona una categoría');
-        if(type === 'inc' && !cat) cat = 'General';
+        if(type === 'exp' && !cat) return alert('Selecciona una categoría primero');
+        
         const desc=document.getElementById('fDesc').value;
         const tx={
             id:editId||Date.now(), date:document.getElementById('fDate').value,
@@ -550,8 +599,12 @@
             cat, desc, exec:document.getElementById('fExec').checked,
             linkId:type=='exp'?document.getElementById('fLink').value:null, deletedAt:null
         };
-        if(!appData.concepts['all']) appData.concepts['all'] = [];
-        if(!appData.concepts['all'].includes(desc)) appData.concepts['all'].push(desc);
+        
+        // Guardar nuevo concepto en su categoria correspondiente
+        const storeKey = type === 'inc' ? 'Ingresos' : cat;
+        if(!appData.concepts[storeKey]) appData.concepts[storeKey] = [];
+        if(!appData.concepts[storeKey].includes(desc)) appData.concepts[storeKey].push(desc);
+        
         if(editId){ const i=appData.txs.findIndex(x=>x.id==editId); appData.txs[i]=tx; } else appData.txs.push(tx);
         saveData(); closeModal({target:document.getElementById('modalOverlay')});
     }
@@ -560,8 +613,28 @@
         const t=appData.txs.find(x=>x.id==id); if(!t)return; editId=id;
         document.getElementById('mTitle').innerText='Editar'; document.getElementById('btnDel').style.display='block';
         document.getElementById('fAmt').value=t.amount; document.getElementById('fDate').value=t.date; document.getElementById('fDesc').value=t.desc; document.getElementById('fExec').checked=t.exec;
+        
         setType(t.type); 
-        if(t.type === 'exp') { const cs=document.querySelectorAll('.chip'); for(let c of cs) if(c.innerText==t.cat) selectCat(t.cat,c); renderLinkOpts(t.linkId); }
+        
+        if(t.type === 'exp') { 
+            // Seleccionar chip visualmente
+            const cs=document.querySelectorAll('.chip'); 
+            for(let c of cs) {
+                if(c.innerText==t.cat) {
+                    c.click(); // Esto activa renderConcepts(c) y visual selection
+                    break;
+                }
+            }
+            renderLinkOpts(t.linkId); 
+        } else {
+            // Si es ingreso, ya se renderizaron los conceptos al hacer setType('inc')
+        }
+        // Seleccionar sub-chip visualmente si existe
+        setTimeout(() => {
+             const scs=document.querySelectorAll('.sub-chip');
+             for(let sc of scs) if(sc.innerText==t.desc) sc.classList.add('active');
+        }, 50);
+
         document.getElementById('modalOverlay').classList.add('open');
     }
 
