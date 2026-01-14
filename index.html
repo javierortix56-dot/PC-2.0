@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J&M Finance OS V8</title>
+    <title>J&M Finance OS V9 - Interactive Stats</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
         .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-weight: 600; }
         ::-webkit-scrollbar { width: 5px; height: 5px; } ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
 
-        /* SIDEBAR COMPACT */
+        /* SIDEBAR */
         .sidebar { width: 50px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 15px 0; flex-shrink: 0; z-index: 50; }
         .nav-btn { width: 36px; height: 36px; border-radius: 8px; color: #94A3B8; cursor: pointer; display: grid; place-items: center; margin-bottom: 10px; transition: 0.2s; font-size: 16px; }
         .nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
@@ -31,14 +31,14 @@
         /* MAIN */
         .main { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
 
-        /* HEADER COMPACT */
+        /* HEADER */
         .header { height: 48px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; }
         .date-box { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 3px; border-radius: 6px; border: 1px solid var(--border); }
         .d-btn { width: 24px; height: 24px; border: none; background: white; border-radius: 5px; cursor: pointer; color: var(--txt-dim); display: grid; place-items: center; }
         .d-txt { font-weight: 700; font-size: 12px; min-width: 100px; text-align: center; position: relative; }
         .d-pk { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
 
-        /* KPIS COMPACT */
+        /* KPIS */
         .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px 20px 0 20px; flex-shrink: 0; }
         .k-card { background: var(--surface); padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); display:flex; flex-direction:column; justify-content:center; }
         .k-lbl { font-size: 10px; font-weight: 700; color: var(--txt-dim); text-transform: uppercase; margin-bottom: 2px; }
@@ -48,23 +48,18 @@
         .view { display: none; padding: 12px 20px; height: 100%; overflow: hidden; gap: 12px; }
         .view.active { display: grid; }
 
-        /* TAB 1: OPS (3 COLS) */
+        /* TAB 1: OPS */
         #v-ops { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; }
         .panel { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; height: 100%; }
         .p-head { padding: 10px 14px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 11px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; color: var(--txt-dim); }
         .p-body { flex: 1; overflow-y: auto; }
-
-        /* LISTS COMPACT */
         .row { padding: 8px 12px; border-bottom: 1px solid var(--bg); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.1s; }
         .row:hover { background: #F1F5F9; }
-        .row.executed { opacity: 0.5; } 
-        .row.executed .r-main { text-decoration: line-through; }
-        
+        .row.executed { opacity: 0.5; } .row.executed .r-main { text-decoration: line-through; }
         .r-main { font-weight: 600; font-size: 12px; color: var(--txt); margin-bottom: 1px; }
         .r-sub { font-size: 10px; color: var(--txt-dim); display: flex; gap: 6px; align-items: center; }
         .tag { background: var(--bg); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); font-size: 9px; }
-
-        /* ALLOCATIONS */
+        /* Allocations */
         .a-box { border-bottom: 1px solid var(--border); }
         .a-head { padding: 8px 12px; cursor: pointer; background: white; }
         .a-head:hover { background: #F8FAFC; }
@@ -72,28 +67,49 @@
         .a-fill { height: 100%; }
         .a-body { display: none; background: #F8FAFC; border-top: 1px solid var(--border); }
         .a-box.open .a-body { display: block; }
-        
-        /* Fixed Strikethrough for Allocation sub-rows */
         .a-row { padding: 6px 12px 6px 24px; border-bottom: 1px dashed var(--border); font-size: 11px; display: flex; justify-content: space-between; color: var(--txt-dim); }
         .a-row.executed { text-decoration: line-through; opacity: 0.6; }
 
-        /* TAB 2: VISUALS */
-        #v-viz { grid-template-rows: 240px 1fr; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
-        .chart-row-top { width: 100%; }
-        .chart-row-bot { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 250px; }
+        /* TAB 2: VISUALS (REORDERED) */
+        #v-viz { grid-template-rows: 1fr 240px; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
         
-        .c-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; height: 100%; }
+        /* Row 1: Pies (Top) */
+        .viz-top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 250px; }
+        
+        /* Row 2: Flow (Bottom) */
+        .viz-bot-row { width: 100%; }
+        
+        .c-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; height: 100%; position: relative; }
         .c-tit { font-size: 11px; font-weight: 700; color: var(--txt-dim); margin-bottom: 8px; text-transform: uppercase; display:flex; justify-content:space-between; }
         .cv-wrap { flex: 1; position: relative; min-height: 0; }
+        
+        /* Custom Legend Grid */
+        .leg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); max-height: 80px; overflow-y: auto; }
+        .leg-item { font-size: 10px; display: flex; align-items: center; gap: 5px; cursor: pointer; color: var(--txt-dim); padding: 2px; border-radius: 4px; }
+        .leg-item:hover { background: var(--bg); color: var(--txt); }
+        .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-        /* MODAL */
+        /* TAB 3: ADMIN */
+        #v-admin .panel { max-width: 400px; margin: auto; height: auto; overflow: visible; }
+
+        /* MODALS */
         .modal-ol { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-ol.open { display: flex; }
+        
+        /* Edit Modal */
         .modal { background: white; width: 400px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        
+        /* Detail Modal (Smaller) */
+        .modal-det { background: white; width: 320px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); overflow: hidden; display: flex; flex-direction: column; max-height: 60vh; }
+
         .m-head { padding: 12px 16px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .m-body { padding: 16px; overflow-y: auto; }
+        
+        .det-list { display: flex; flex-direction: column; }
+        .det-row { padding: 8px 0; border-bottom: 1px solid var(--bg); display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .det-row:last-child { border-bottom: none; }
 
-        /* FORM */
+        /* FORM ELEMENTS */
         .seg { display: flex; background: var(--bg); padding: 3px; border-radius: 8px; margin-bottom: 15px; }
         .seg-btn { flex: 1; border: none; background: transparent; padding: 6px; font-weight: 600; color: var(--txt-dim); cursor: pointer; border-radius: 6px; font-size: 11px; }
         .seg-btn.active { background: white; color: var(--txt); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
@@ -104,18 +120,17 @@
         .lbl { font-size: 10px; font-weight: 700; color: var(--txt-dim); margin-bottom: 4px; display: block; }
         .inp { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 13px; background: #FAFAFA; }
         .inp:focus { background: white; border-color: var(--primary); }
-
+        
         .chip-c { display: flex; flex-wrap: wrap; gap: 6px; }
         .chip { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: white; font-size: 11px; cursor: pointer; color: var(--txt-dim); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         .fab { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--txt); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; border: none; transition: 0.2s; z-index: 100; }
         .fab:hover { transform: scale(1.1); background: var(--primary); }
 
         @media (max-width: 900px) {
             #v-ops { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
             .kpis { grid-template-columns: 1fr 1fr; }
-            .chart-row-bot { grid-template-columns: 1fr; }
+            .viz-top-row { grid-template-columns: 1fr; }
             #v-viz { grid-template-rows: auto auto; }
         }
     </style>
@@ -169,28 +184,31 @@
     </div>
 
     <div id="v-viz" class="view">
-        <div class="c-card chart-row-top">
-            <div class="c-tit"><span>Flujo de Caja Diario (Ingresos vs Gastos)</span></div>
-            <div class="cv-wrap"><canvas id="chartFlow"></canvas></div>
-        </div>
         
-        <div class="chart-row-bot">
+        <div class="viz-top-row">
             <div class="c-card">
                 <div class="c-tit">
                     <span>Gastos por Categoría</span>
                     <button onclick="resetCharts()" style="border:none; background:none; color:var(--primary); font-size:9px; cursor:pointer;">RESET</button>
                 </div>
                 <div class="cv-wrap"><canvas id="chartExp"></canvas></div>
+                <div class="leg-grid" id="legExp"></div>
             </div>
             <div class="c-card">
                 <div class="c-tit"><span>Ingresos por Concepto</span></div>
                 <div class="cv-wrap"><canvas id="chartInc"></canvas></div>
+                <div class="leg-grid" id="legInc"></div>
             </div>
+        </div>
+
+        <div class="c-card viz-bot-row">
+            <div class="c-tit"><span>Flujo de Caja Diario (Click para detalle)</span></div>
+            <div class="cv-wrap"><canvas id="chartFlow"></canvas></div>
         </div>
     </div>
 
     <div id="v-admin" class="view">
-        <div class="panel" style="max-width:400px; margin:auto; height:auto; overflow:visible;">
+        <div class="panel">
             <div class="p-head">Opciones</div>
             <div style="padding:20px;">
                 <div class="inp-r">
@@ -212,47 +230,32 @@
 <div class="modal-ol" id="modalOverlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
         <form id="txForm">
-            <div class="m-head">
-                <span id="modalTitle">Nuevo</span>
-                <i class="fas fa-times" onclick="closeModal()" style="cursor:pointer; color:var(--txt-dim)"></i>
-            </div>
+            <div class="m-head"><span id="modalTitle">Nuevo</span><i class="fas fa-times" onclick="closeModal()" style="cursor:pointer; color:var(--txt-dim)"></i></div>
             <div class="m-body">
                 <div class="seg">
                     <button type="button" class="seg-btn active exp" id="btnExp" onclick="setType('exp')">Gasto</button>
                     <button type="button" class="seg-btn" id="btnInc" onclick="setType('inc')">Ingreso</button>
                 </div>
                 <input type="hidden" id="fType" value="exp">
-
                 <div style="display:flex; gap:10px; margin-bottom:12px;">
                     <div style="flex:1"><label class="lbl">Monto</label><input type="number" id="fAmt" class="inp num" step="0.01" required></div>
                     <div style="flex:1"><label class="lbl">Fecha</label><input type="date" id="fDate" class="inp" required></div>
                 </div>
-
-                <div class="inp-r">
-                    <label class="lbl">Categoría</label>
-                    <div id="chipBox" class="chip-c"></div>
-                    <input type="hidden" id="fCat" required>
-                </div>
-
-                <div class="inp-r">
-                    <label class="lbl">Concepto</label>
-                    <input type="text" id="fDesc" class="inp" list="dlConc" required>
-                    <datalist id="dlConc"></datalist>
-                </div>
-
-                <div class="inp-r" id="linkRow">
-                    <label class="lbl">Asignar a Fuente</label>
-                    <select id="fLink" class="inp"></select>
-                </div>
-
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:15px;">
-                    <input type="checkbox" id="fExec"> <label for="fExec" style="font-size:11px;">Ejecutado</label>
-                </div>
-
+                <div class="inp-r"><label class="lbl">Categoría</label><div id="chipBox" class="chip-c"></div><input type="hidden" id="fCat" required></div>
+                <div class="inp-r"><label class="lbl">Concepto</label><input type="text" id="fDesc" class="inp" list="dlConc" required><datalist id="dlConc"></datalist></div>
+                <div class="inp-r" id="linkRow"><label class="lbl">Asignar a Fuente</label><select id="fLink" class="inp"></select></div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:15px;"><input type="checkbox" id="fExec"> <label for="fExec" style="font-size:11px;">Ejecutado</label></div>
                 <button type="submit" style="width:100%; background:var(--txt); color:white; padding:10px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">Guardar</button>
                 <button type="button" id="btnDel" onclick="delTx()" style="display:none; width:100%; color:var(--exp); background:none; border:none; margin-top:5px; cursor:pointer;">Eliminar</button>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal-ol" id="detailOverlay" onclick="closeDetail(event)">
+    <div class="modal-det" onclick="event.stopPropagation()">
+        <div class="m-head"><span id="detTitle">Detalle</span><i class="fas fa-times" onclick="closeDetail()" style="cursor:pointer; color:var(--txt-dim)"></i></div>
+        <div class="m-body" id="detBody"></div>
     </div>
 </div>
 
@@ -315,7 +318,6 @@
             const rem = inc.amount - spent;
             const pct = Math.min(100, (spent/inc.amount)*100);
             
-            // FIXED STRIKETHROUGH LOGIC: Check 's.exec' and add 'executed' class
             let rows = '';
             subs.forEach(s => rows+=`<div class="a-row ${s.exec?'executed':''}" onclick="editTx(${s.id})"><span>${s.desc}</span><span class="num">$${fmt(s.amount)}</span></div>`);
 
@@ -331,7 +333,11 @@
     }
 
     function renderVisuals(txs) {
-        // 1. CASH FLOW (Income vs Expenses per day)
+        // 1. DOUGHNUTS
+        renderPie(document.getElementById('chartExp'), document.getElementById('legExp'), txs.filter(t=>t.type=='exp'), 'cat', true, cExp, (i)=>cExp=i);
+        renderPie(document.getElementById('chartInc'), document.getElementById('legInc'), txs.filter(t=>t.type=='inc'), 'desc', false, cInc, (i)=>cInc=i);
+
+        // 2. CASH FLOW (Interactive)
         const days = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0).getDate();
         const lbs = Array.from({length:days},(_,i)=>i+1);
         const dInc = new Array(days).fill(0), dExp = new Array(days).fill(0);
@@ -347,30 +353,68 @@
             data: { 
                 labels: lbs, 
                 datasets: [
-                    { label:'Ingresos', data:dInc, backgroundColor:'#10B981', borderRadius:2 },
-                    { label:'Gastos', data:dExp, backgroundColor:'#EF4444', borderRadius:2 }
+                    { label:'Ingresos', data:dInc, backgroundColor:'#10B981', borderRadius:2, barPercentage:0.6 },
+                    { label:'Gastos', data:dExp, backgroundColor:'#EF4444', borderRadius:2, barPercentage:0.6 }
                 ] 
             },
-            options: { responsive:true, maintainAspectRatio:false, scales:{x:{grid:{display:false}}, y:{beginAtZero:true}}, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:10}}} }
+            options: { 
+                responsive:true, maintainAspectRatio:false, 
+                scales:{x:{grid:{display:false}}, y:{beginAtZero:true}}, 
+                plugins:{legend:{position:'top', align:'end'}},
+                onClick: (e, elements) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        showDayDetails(idx + 1, txs);
+                    }
+                }
+            }
         });
-
-        // 2. PIES
-        renderPie(document.getElementById('chartExp'), txs.filter(t=>t.type=='exp'), 'cat', true, cExp, (i)=>cExp=i);
-        renderPie(document.getElementById('chartInc'), txs.filter(t=>t.type=='inc'), 'desc', false, cInc, (i)=>cInc=i);
     }
 
-    function renderPie(cvs, dataSet, key, drill, inst, setInst) {
+    function renderPie(cvs, leg, dataSet, key, drill, inst, setInst) {
         if(inst) inst.destroy();
         let map={};
         if(drill && drillCat) dataSet.filter(t=>t.cat==drillCat).forEach(t=>map[t.desc]=(map[t.desc]||0)+t.amount);
         else dataSet.forEach(t=>map[t[key]]=(map[t[key]]||0)+t.amount);
         
         const ent = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+        const tot = ent.reduce((a,b)=>a+b[1],0);
+
         setInst(new Chart(cvs, {
             type: 'doughnut',
             data: { labels: ent.map(e=>e[0]), datasets: [{ data: ent.map(e=>e[1]), backgroundColor: PAL, borderWidth:0 }] },
-            options: { responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'right', labels:{boxWidth:10, font:{size:10}}}} }
+            options: { responsive:true, maintainAspectRatio:false, cutout:'70%', plugins:{legend:{display:false}}, onClick:(e,el)=>{if(drill&&!drillCat&&el.length){drillCat=ent[el[0].index][0]; loadMonthData();}} }
         }));
+
+        leg.innerHTML = '';
+        ent.forEach((e,i) => {
+            const pct = tot>0 ? Math.round((e[1]/tot)*100) : 0;
+            leg.innerHTML += `<div class="leg-item" onclick="${drill&&!drillCat?`drillCat='${e[0]}';loadMonthData()`:''}"><div class="dot" style="background:${PAL[i%PAL.length]}"></div><div style="flex:1"><b>${e[0]}</b></div><div>$${fmt(e[1])} ${pct}%</div></div>`;
+        });
+    }
+
+    function showDayDetails(day, txs) {
+        const dStr = day.toString().padStart(2,'0');
+        const list = txs.filter(t => t.date.split('-')[2] == dStr);
+        const box = document.getElementById('detBody');
+        document.getElementById('detTitle').innerText = `Día ${dStr} - Movimientos`;
+        box.innerHTML = '';
+        
+        if(list.length === 0) {
+            box.innerHTML = '<div style="color:#999; text-align:center;">Sin movimientos</div>';
+        } else {
+            let html = '<div class="det-list">';
+            list.forEach(t => {
+                html += `<div class="det-row"><div><div style="font-weight:700">${t.desc}</div><div style="color:#888">${t.cat}</div></div><div style="font-weight:700; color:${t.type=='inc'?'var(--inc)':'var(--exp)'}">$${fmt(t.amount)}</div></div>`;
+            });
+            html += '</div>';
+            box.innerHTML = html;
+        }
+        document.getElementById('detailOverlay').classList.add('open');
+    }
+
+    function closeDetail(e) { 
+        if(!e || e.target.id=='detailOverlay' || e.target.tagName=='I') document.getElementById('detailOverlay').classList.remove('open'); 
     }
 
     function resetCharts(){ drillCat=null; loadMonthData(); }
@@ -383,7 +427,6 @@
         document.getElementById('fType').value = t;
         document.getElementById('btnExp').className = `seg-btn ${t=='exp'?'active exp':''}`;
         document.getElementById('btnInc').className = `seg-btn ${t=='inc'?'active inc':''}`;
-        
         const b=document.getElementById('chipBox'); b.innerHTML='';
         (appData.cats[t]||[]).forEach(c=>{
             const el=document.createElement('div'); el.className='chip'; el.innerText=c;
@@ -392,10 +435,8 @@
         const add=document.createElement('div'); add.className='chip'; add.innerText='+'; add.style.borderStyle='dashed';
         add.onclick=()=>{const n=prompt('Nueva');if(n){if(!appData.cats[t])appData.cats[t]=[];appData.cats[t].push(n);saveData();setType(t);}};
         b.appendChild(add);
-
         document.getElementById('linkRow').style.display=t=='exp'?'block':'none';
         if(t=='exp') renderLinkOpts();
-        
         const dl=document.getElementById('dlConc'); dl.innerHTML='';
         Object.values(appData.concepts).flat().forEach(c=>dl.appendChild(new Option(c)));
     }
