@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J&M Finance OS V7 - Timeline</title>
+    <title>J&M Finance OS V8</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,131 +11,126 @@
 
     <style>
         :root {
-            --bg: #F1F5F9; --surface: #FFFFFF; --sidebar: #1E293B;
-            --txt: #0F172A; --txt-dim: #64748B;
+            --bg: #F1F5F9; --surface: #FFFFFF; --sidebar: #0F172A;
+            --txt: #1E293B; --txt-dim: #64748B;
             --inc: #10B981; --exp: #EF4444; --primary: #6366F1;
-            --border: #E2E8F0; --radius: 12px;
+            --border: #E2E8F0; --radius: 8px;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); margin: 0; height: 100vh; display: flex; font-size: 14px; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); margin: 0; height: 100vh; display: flex; font-size: 12px; overflow: hidden; }
         .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-weight: 600; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; } ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
 
-        /* SIDEBAR */
-        .sidebar { width: 64px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 24px 0; flex-shrink: 0; z-index: 50; }
-        .nav-btn { width: 44px; height: 44px; border-radius: 12px; color: #94A3B8; cursor: pointer; display: grid; place-items: center; margin-bottom: 16px; transition: 0.2s; font-size: 18px; }
+        /* SIDEBAR COMPACT */
+        .sidebar { width: 50px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 15px 0; flex-shrink: 0; z-index: 50; }
+        .nav-btn { width: 36px; height: 36px; border-radius: 8px; color: #94A3B8; cursor: pointer; display: grid; place-items: center; margin-bottom: 10px; transition: 0.2s; font-size: 16px; }
         .nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+        .nav-btn.active { background: var(--primary); color: white; }
 
         /* MAIN */
         .main { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
 
-        /* HEADER */
-        .header { height: 64px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0; }
-        .date-box { display: flex; align-items: center; gap: 12px; background: var(--bg); padding: 6px; border-radius: 10px; border: 1px solid var(--border); }
-        .d-btn { width: 28px; height: 28px; border: none; background: white; border-radius: 8px; cursor: pointer; color: var(--txt-dim); display: grid; place-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .d-txt { font-weight: 700; font-size: 14px; min-width: 120px; text-align: center; position: relative; }
+        /* HEADER COMPACT */
+        .header { height: 48px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; }
+        .date-box { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 3px; border-radius: 6px; border: 1px solid var(--border); }
+        .d-btn { width: 24px; height: 24px; border: none; background: white; border-radius: 5px; cursor: pointer; color: var(--txt-dim); display: grid; place-items: center; }
+        .d-txt { font-weight: 700; font-size: 12px; min-width: 100px; text-align: center; position: relative; }
         .d-pk { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
 
-        /* KPI STRIP */
-        .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 24px 32px 0 32px; flex-shrink: 0; }
-        .k-card { background: var(--surface); padding: 16px 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); display:flex; flex-direction:column; justify-content:center; }
-        .k-lbl { font-size: 11px; font-weight: 700; color: var(--txt-dim); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.05em; }
-        .k-val { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        /* KPIS COMPACT */
+        .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 12px 20px 0 20px; flex-shrink: 0; }
+        .k-card { background: var(--surface); padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); display:flex; flex-direction:column; justify-content:center; }
+        .k-lbl { font-size: 10px; font-weight: 700; color: var(--txt-dim); text-transform: uppercase; margin-bottom: 2px; }
+        .k-val { font-size: 16px; font-weight: 800; }
 
-        /* VIEWPORTS */
-        .view { display: none; padding: 24px 32px; height: 100%; overflow: hidden; gap: 24px; }
+        /* VIEWS */
+        .view { display: none; padding: 12px 20px; height: 100%; overflow: hidden; gap: 12px; }
         .view.active { display: grid; }
 
-        /* --- TAB 1: OPERACIONES (3 COLUMNS) --- */
+        /* TAB 1: OPS (3 COLS) */
         #v-ops { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; }
-        
-        .panel { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .p-head { padding: 18px 24px; background: #FAFAFA; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 13px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.05em; color: var(--txt-dim); }
-        .p-body { flex: 1; overflow-y: auto; padding: 0; }
+        .panel { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; height: 100%; }
+        .p-head { padding: 10px 14px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 11px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; color: var(--txt-dim); }
+        .p-body { flex: 1; overflow-y: auto; }
 
-        /* List Items (More Spacing) */
-        .row { padding: 14px 20px; border-bottom: 1px solid var(--bg); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s; }
-        .row:hover { background: #F8FAFC; padding-left: 24px; }
-        .row.done { opacity: 0.5; } .row.done .r-main { text-decoration: line-through; }
+        /* LISTS COMPACT */
+        .row { padding: 8px 12px; border-bottom: 1px solid var(--bg); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.1s; }
+        .row:hover { background: #F1F5F9; }
+        .row.executed { opacity: 0.5; } 
+        .row.executed .r-main { text-decoration: line-through; }
         
-        .r-main { font-weight: 600; font-size: 14px; color: var(--txt); margin-bottom: 4px; }
-        .r-sub { font-size: 12px; color: var(--txt-dim); display: flex; gap: 8px; align-items: center; }
-        .tag { background: var(--bg); padding: 2px 8px; border-radius: 6px; font-weight: 500; font-size: 11px; border: 1px solid var(--border); }
-        
-        /* Allocation Items */
+        .r-main { font-weight: 600; font-size: 12px; color: var(--txt); margin-bottom: 1px; }
+        .r-sub { font-size: 10px; color: var(--txt-dim); display: flex; gap: 6px; align-items: center; }
+        .tag { background: var(--bg); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); font-size: 9px; }
+
+        /* ALLOCATIONS */
         .a-box { border-bottom: 1px solid var(--border); }
-        .a-head { padding: 16px 20px; cursor: pointer; background: white; transition: 0.2s; }
-        .a-head:hover { background: #FAFAFA; }
-        .a-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .a-head { padding: 8px 12px; cursor: pointer; background: white; }
+        .a-head:hover { background: #F8FAFC; }
+        .a-bar { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 5px; overflow: hidden; }
         .a-fill { height: 100%; }
         .a-body { display: none; background: #F8FAFC; border-top: 1px solid var(--border); }
         .a-box.open .a-body { display: block; }
-        .a-row { padding: 10px 20px; border-bottom: 1px dashed var(--border); font-size: 12px; display: flex; justify-content: space-between; color: var(--txt-dim); }
+        
+        /* Fixed Strikethrough for Allocation sub-rows */
+        .a-row { padding: 6px 12px 6px 24px; border-bottom: 1px dashed var(--border); font-size: 11px; display: flex; justify-content: space-between; color: var(--txt-dim); }
+        .a-row.executed { text-decoration: line-through; opacity: 0.6; }
 
-        /* --- TAB 2: VISUALS (GRID) --- */
-        #v-viz { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; overflow-y: auto; }
-        .chart-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; min-height: 300px; position: relative; }
-        .full-width { grid-column: span 2; }
-        .c-title { font-weight: 700; font-size: 14px; color: var(--txt-dim); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; }
-        .canvas-wrap { flex: 1; position: relative; min-height: 0; }
-        .legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; max-height: 80px; overflow-y: auto; }
-        .l-itm { font-size: 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--txt-dim); }
-        .l-itm:hover { color: var(--txt); }
-        .dot { width: 10px; height: 10px; border-radius: 3px; }
+        /* TAB 2: VISUALS */
+        #v-viz { grid-template-rows: 240px 1fr; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; }
+        .chart-row-top { width: 100%; }
+        .chart-row-bot { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 250px; }
+        
+        .c-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; height: 100%; }
+        .c-tit { font-size: 11px; font-weight: 700; color: var(--txt-dim); margin-bottom: 8px; text-transform: uppercase; display:flex; justify-content:space-between; }
+        .cv-wrap { flex: 1; position: relative; min-height: 0; }
 
-        /* MODAL & FAB */
-        .fab { position: fixed; bottom: 32px; right: 32px; width: 64px; height: 64px; background: var(--txt); color: white; border-radius: 20px; display: grid; place-items: center; font-size: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); cursor: pointer; border: none; transition: 0.2s; z-index: 100; }
-        .fab:hover { transform: translateY(-4px) rotate(90deg); background: var(--primary); }
-
-        .modal-ol { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+        /* MODAL */
+        .modal-ol { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-ol.open { display: flex; }
-        .modal { background: white; width: 500px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
-        .m-head { padding: 20px 24px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .m-body { padding: 24px; overflow-y: auto; }
+        .modal { background: white; width: 400px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .m-head { padding: 12px 16px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .m-body { padding: 16px; overflow-y: auto; }
 
-        /* FORM ELEMENTS */
-        .seg-ctrl { display: flex; background: var(--bg); padding: 4px; border-radius: 10px; margin-bottom: 24px; }
-        .seg-btn { flex: 1; border: none; background: transparent; padding: 10px; font-weight: 600; color: var(--txt-dim); cursor: pointer; border-radius: 8px; transition: 0.2s; }
-        .seg-btn.active { background: white; color: var(--txt); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .seg-btn.active.inc { color: var(--inc); }
+        /* FORM */
+        .seg { display: flex; background: var(--bg); padding: 3px; border-radius: 8px; margin-bottom: 15px; }
+        .seg-btn { flex: 1; border: none; background: transparent; padding: 6px; font-weight: 600; color: var(--txt-dim); cursor: pointer; border-radius: 6px; font-size: 11px; }
+        .seg-btn.active { background: white; color: var(--txt); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .seg-btn.active.inc { color: var(--inc); } 
         .seg-btn.active.exp { color: var(--exp); }
 
-        .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        .lbl { font-size: 11px; font-weight: 700; color: var(--txt-dim); margin-bottom: 6px; display: block; text-transform: uppercase; }
-        .inp { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 14px; background: #F8FAFC; transition: 0.2s; }
-        .inp:focus { background: white; border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
-        
-        .chip-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .chip { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: white; font-size: 12px; font-weight: 500; color: var(--txt-dim); cursor: pointer; transition: 0.1s; }
-        .chip:hover { border-color: var(--txt-dim); color: var(--txt); }
+        .inp-r { margin-bottom: 12px; }
+        .lbl { font-size: 10px; font-weight: 700; color: var(--txt-dim); margin-bottom: 4px; display: block; }
+        .inp { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 13px; background: #FAFAFA; }
+        .inp:focus { background: white; border-color: var(--primary); }
+
+        .chip-c { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: white; font-size: 11px; cursor: pointer; color: var(--txt-dim); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .chip.add { border-style: dashed; color: var(--primary); }
 
-        .btn-main { width: 100%; background: var(--txt); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 10px; }
-        .btn-main:hover { background: #000; }
+        .fab { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--txt); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; border: none; transition: 0.2s; z-index: 100; }
+        .fab:hover { transform: scale(1.1); background: var(--primary); }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 900px) {
             #v-ops { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
-            #v-viz { grid-template-columns: 1fr; }
-            .full-width { grid-column: auto; }
             .kpis { grid-template-columns: 1fr 1fr; }
+            .chart-row-bot { grid-template-columns: 1fr; }
+            #v-viz { grid-template-rows: auto auto; }
         }
     </style>
 </head>
 <body>
 
-<div id="loader" style="position:fixed; inset:0; background:rgba(255,255,255,0.8); z-index:300; display:flex; align-items:center; justify-content:center; flex-direction:column; backdrop-filter:blur(5px); display:none;">
-    <div style="width:40px; height:40px; border:4px solid #E2E8F0; border-top-color:var(--primary); border-radius:50%; animation:spin 1s infinite;"></div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="loader" style="position:fixed; inset:0; background:rgba(255,255,255,0.8); z-index:300; display:none; align-items:center; justify-content:center;">
+    <i class="fas fa-circle-notch fa-spin" style="font-size:24px; color:var(--primary)"></i>
 </div>
 
 <aside class="sidebar">
-    <div class="nav-btn active" onclick="nav('ops')"><i class="fas fa-columns"></i></div>
-    <div class="nav-btn" onclick="nav('viz')"><i class="fas fa-chart-bar"></i></div>
+    <div class="nav-btn active" onclick="nav('ops')"><i class="fas fa-list-ul"></i></div>
+    <div class="nav-btn" onclick="nav('viz')"><i class="fas fa-chart-pie"></i></div>
     <div class="nav-btn" onclick="nav('admin')"><i class="fas fa-sliders-h"></i></div>
-    <div class="nav-btn" onclick="forceSync()" style="margin-top:auto"><i class="fas fa-sync-alt"></i></div>
+    <div class="nav-btn" onclick="forceSync()" style="margin-top:auto"><i class="fas fa-sync"></i></div>
 </aside>
 
 <main class="main">
@@ -145,73 +140,68 @@
             <div class="d-txt"><span id="monthTxt">...</span><input type="month" id="datePicker" class="d-pk" onchange="manualDate()"></div>
             <button class="d-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:11px; font-weight:700; color:var(--txt-dim)">USD/ARS</span>
-            <input type="number" id="usdRate" value="1200" onchange="updateMonthTC()" style="width:70px; border:none; background:transparent; font-weight:700; font-size:16px; text-align:right;">
+        <div style="display:flex; align-items:center; gap:5px;">
+            <span style="font-size:10px; font-weight:700; color:var(--txt-dim)">TC:</span>
+            <input type="number" id="usdRate" value="1200" onchange="updateMonthTC()" style="width:50px; border:none; background:transparent; font-weight:700; font-size:13px; text-align:right;">
         </div>
     </header>
 
     <div class="kpis">
-        <div class="k-card"><div class="k-lbl">Balance Neto</div><div class="k-val num" id="k-bal">$0</div></div>
-        <div class="k-card"><div class="k-lbl">USD Estimado</div><div class="k-val num" id="k-usd" style="color:#0EA5E9">$0</div></div>
-        <div class="k-card"><div class="k-lbl">Ingresos Totales</div><div class="k-val num" id="k-inc" style="color:var(--inc)">$0</div></div>
-        <div class="k-card"><div class="k-lbl">Gastos Totales</div><div class="k-val num" id="k-exp" style="color:var(--exp)">$0</div></div>
+        <div class="k-card"><div class="k-lbl">Balance</div><div class="k-val num" id="k-bal">$0</div></div>
+        <div class="k-card"><div class="k-lbl">USD Est.</div><div class="k-val num" id="k-usd" style="color:#0EA5E9">$0</div></div>
+        <div class="k-card"><div class="k-lbl">Ingresos</div><div class="k-val num" id="k-inc" style="color:var(--inc)">$0</div></div>
+        <div class="k-card"><div class="k-lbl">Gastos</div><div class="k-val num" id="k-exp" style="color:var(--exp)">$0</div></div>
     </div>
 
     <div id="v-ops" class="view active">
         <div class="panel">
-            <div class="p-head"><span style="color:var(--inc)">Ingresos</span> <span id="c-inc" class="tag">0</span></div>
+            <div class="p-head"><span style="color:var(--inc)">Ingresos</span><span id="c-inc" class="tag">0</span></div>
             <div class="p-body" id="list-inc"></div>
         </div>
         <div class="panel">
-            <div class="p-head"><span style="color:var(--exp)">Gastos</span> <span id="c-exp" class="tag">0</span></div>
+            <div class="p-head"><span style="color:var(--exp)">Gastos</span><span id="c-exp" class="tag">0</span></div>
             <div class="p-body" id="list-exp"></div>
         </div>
         <div class="panel">
-            <div class="p-head"><span style="color:var(--primary)">Asignación de Fondos</span></div>
+            <div class="p-head"><span style="color:var(--primary)">Asignación</span></div>
             <div class="p-body" id="list-alloc"></div>
         </div>
     </div>
 
     <div id="v-viz" class="view">
-        <div class="chart-card full-width">
-            <div class="c-title">
-                <span><i class="far fa-calendar-alt"></i> Flujo de Caja (Línea de Tiempo)</span>
-                <span style="font-size:10px; color:var(--txt-dim); text-transform:none;">Por día del mes</span>
-            </div>
-            <div class="canvas-wrap"><canvas id="chartTime"></canvas></div>
+        <div class="c-card chart-row-top">
+            <div class="c-tit"><span>Flujo de Caja Diario (Ingresos vs Gastos)</span></div>
+            <div class="cv-wrap"><canvas id="chartFlow"></canvas></div>
         </div>
-
-        <div class="chart-card">
-            <div class="c-title">
-                <span>Distribución de Gastos</span>
-                <button onclick="resetCharts()" style="border:none; background:none; color:var(--primary); font-size:10px; cursor:pointer; font-weight:700;">RESET</button>
+        
+        <div class="chart-row-bot">
+            <div class="c-card">
+                <div class="c-tit">
+                    <span>Gastos por Categoría</span>
+                    <button onclick="resetCharts()" style="border:none; background:none; color:var(--primary); font-size:9px; cursor:pointer;">RESET</button>
+                </div>
+                <div class="cv-wrap"><canvas id="chartExp"></canvas></div>
             </div>
-            <div class="canvas-wrap"><canvas id="chartExp"></canvas></div>
-            <div class="legend-grid" id="legExp"></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="c-title">Orígenes de Ingreso</div>
-            <div class="canvas-wrap"><canvas id="chartInc"></canvas></div>
-            <div class="legend-grid" id="legInc"></div>
+            <div class="c-card">
+                <div class="c-tit"><span>Ingresos por Concepto</span></div>
+                <div class="cv-wrap"><canvas id="chartInc"></canvas></div>
+            </div>
         </div>
     </div>
 
     <div id="v-admin" class="view">
-        <div class="panel" style="max-width:500px; margin:auto; height:auto; overflow:visible;">
-            <div class="p-head">Mantenimiento de Datos</div>
-            <div style="padding:24px;">
-                <div style="margin-bottom:20px;">
-                    <label class="lbl">Copiar estructura desde:</label>
+        <div class="panel" style="max-width:400px; margin:auto; height:auto; overflow:visible;">
+            <div class="p-head">Opciones</div>
+            <div style="padding:20px;">
+                <div class="inp-r">
+                    <label class="lbl">Copiar mes anterior:</label>
                     <div style="display:flex; gap:10px;">
                         <input type="month" id="cloneSrc" class="inp">
-                        <button onclick="cloneMonth()" style="background:var(--txt); color:white; border:none; padding:0 20px; border-radius:10px; font-weight:700; cursor:pointer;">Copiar</button>
+                        <button onclick="cloneMonth()" style="background:var(--txt); color:white; border:none; padding:0 15px; border-radius:6px; cursor:pointer;">Copiar</button>
                     </div>
-                    <p style="font-size:12px; color:var(--txt-dim); margin-top:8px;">Esto importará categorías y montos del mes seleccionado al mes actual.</p>
                 </div>
-                <hr style="border:0; border-top:1px solid var(--border); margin:24px 0;">
-                <button onclick="clearMonth()" style="width:100%; background:var(--exp); color:white; padding:16px; border:none; border-radius:10px; font-weight:700; cursor:pointer;">ELIMINAR MES ACTUAL</button>
+                <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+                <button onclick="clearMonth()" style="width:100%; background:var(--exp); color:white; padding:12px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">BORRAR MES</button>
             </div>
         </div>
     </div>
@@ -223,45 +213,44 @@
     <div class="modal" onclick="event.stopPropagation()">
         <form id="txForm">
             <div class="m-head">
-                <span id="modalTitle">Nuevo Movimiento</span>
+                <span id="modalTitle">Nuevo</span>
                 <i class="fas fa-times" onclick="closeModal()" style="cursor:pointer; color:var(--txt-dim)"></i>
             </div>
             <div class="m-body">
-                <div class="seg-ctrl">
+                <div class="seg">
                     <button type="button" class="seg-btn active exp" id="btnExp" onclick="setType('exp')">Gasto</button>
                     <button type="button" class="seg-btn" id="btnInc" onclick="setType('inc')">Ingreso</button>
                 </div>
                 <input type="hidden" id="fType" value="exp">
 
-                <div class="f-row">
-                    <div><label class="lbl">Monto</label><input type="number" id="fAmt" class="inp num" step="0.01" required placeholder="$0.00"></div>
-                    <div><label class="lbl">Fecha</label><input type="date" id="fDate" class="inp" required></div>
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <div style="flex:1"><label class="lbl">Monto</label><input type="number" id="fAmt" class="inp num" step="0.01" required></div>
+                    <div style="flex:1"><label class="lbl">Fecha</label><input type="date" id="fDate" class="inp" required></div>
                 </div>
 
-                <div style="margin-bottom:16px;">
+                <div class="inp-r">
                     <label class="lbl">Categoría</label>
-                    <div id="chipBox" class="chip-box"></div>
+                    <div id="chipBox" class="chip-c"></div>
                     <input type="hidden" id="fCat" required>
                 </div>
 
-                <div style="margin-bottom:16px;">
+                <div class="inp-r">
                     <label class="lbl">Concepto</label>
-                    <input type="text" id="fDesc" class="inp" list="dlConc" placeholder="Descripción..." required>
+                    <input type="text" id="fDesc" class="inp" list="dlConc" required>
                     <datalist id="dlConc"></datalist>
                 </div>
 
-                <div style="margin-bottom:20px;" id="linkRow">
-                    <label class="lbl">Asignar a Fuente (Opcional)</label>
+                <div class="inp-r" id="linkRow">
+                    <label class="lbl">Asignar a Fuente</label>
                     <select id="fLink" class="inp"></select>
                 </div>
 
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-                    <input type="checkbox" id="fExec" style="width:18px; height:18px;">
-                    <label for="fExec" style="font-size:13px; font-weight:500;">Marcar como Ejecutado (Pagado/Cobrado)</label>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:15px;">
+                    <input type="checkbox" id="fExec"> <label for="fExec" style="font-size:11px;">Ejecutado</label>
                 </div>
 
-                <button type="submit" class="btn-main">GUARDAR REGISTRO</button>
-                <button type="button" id="btnDel" onclick="delTx()" style="display:none; width:100%; color:var(--exp); background:none; border:none; margin-top:10px; cursor:pointer; font-weight:600;">Eliminar</button>
+                <button type="submit" style="width:100%; background:var(--txt); color:white; padding:10px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">Guardar</button>
+                <button type="button" id="btnDel" onclick="delTx()" style="display:none; width:100%; color:var(--exp); background:none; border:none; margin-top:5px; cursor:pointer;">Eliminar</button>
             </div>
         </form>
     </div>
@@ -269,186 +258,124 @@
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxEni9GJ4gxmbhmNsbzoYxS_SfhcorqsXj4zh93-qWIy5i2R4jwvgJ8L25GcU3h3Bkh/exec";
-    const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-    const PAL = ['#6366F1','#EC4899','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#14B8A6'];
+    const MONTHS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+    const PAL = ['#6366F1','#EC4899','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4'];
 
     let appData = { txs: [], cats: { exp:[], inc:[] }, concepts: {}, rates: {} };
     let currentDate = new Date(); currentDate.setDate(1);
-    let editId=null, cExp=null, cInc=null, cTime=null, drillCat=null;
+    let editId=null, cFlow=null, cExp=null, cInc=null, drillCat=null;
     const fmt = (n) => n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
     window.onload = () => { updateDateUI(); forceSync(); };
 
     async function forceSync() {
         document.getElementById('loader').style.display='flex';
-        try {
-            const r = await fetch(API_URL); appData = await r.json();
-            if(!appData.rates) appData.rates = {}; loadMonthData();
-        } catch(e) { console.error(e); alert("Offline"); }
+        try { const r = await fetch(API_URL); appData = await r.json(); if(!appData.rates) appData.rates={}; loadMonthData(); } catch(e){}
         document.getElementById('loader').style.display='none';
     }
 
     async function saveData() {
         document.getElementById('loader').style.display='flex';
-        try { await fetch(API_URL, { method: 'POST', body: JSON.stringify(appData) }); loadMonthData(); } 
-        catch(e){ alert('Error'); }
+        try { await fetch(API_URL, { method: 'POST', body: JSON.stringify(appData) }); loadMonthData(); } catch(e){ alert('Error'); }
         document.getElementById('loader').style.display='none';
     }
 
     function loadMonthData() {
         const y = currentDate.getFullYear(), m = currentDate.getMonth() + 1;
-        const key = `${y}-${m.toString().padStart(2,'0')}`;
-        document.getElementById('usdRate').value = appData.rates[key] || 1200;
-
+        document.getElementById('usdRate').value = appData.rates[`${y}-${m.toString().padStart(2,'0')}`] || 1200;
         const txs = appData.txs.filter(t => !t.deletedAt && parseInt(t.date.split('-')[0]) === y && parseInt(t.date.split('-')[1]) === m);
         txs.sort((a,b) => a.date.localeCompare(b.date) || a.id - b.id);
 
-        renderLedger(txs);
-        renderAllocation(txs);
+        renderLists(txs);
         renderVisuals(txs);
-        calcKPI(txs, document.getElementById('usdRate').value);
+        calcKPI(txs);
     }
 
-    // --- TAB 1: OPERACIONES ---
-    function renderLedger(txs) {
-        const lI = document.getElementById('list-inc'), lE = document.getElementById('list-exp');
-        lI.innerHTML=''; lE.innerHTML=''; let rb=0;
+    function renderLists(txs) {
+        const lI=document.getElementById('list-inc'), lE=document.getElementById('list-exp'), lA=document.getElementById('list-alloc');
+        lI.innerHTML=''; lE.innerHTML=''; lA.innerHTML=''; let rb=0;
 
         txs.forEach(t => {
             if(t.type=='inc') rb+=t.amount; else rb-=t.amount;
-            const row = document.createElement('div');
-            row.className = `row ${t.exec?'done':''}`;
-            row.onclick = () => editTx(t.id);
-            
-            let extra = '';
-            if(t.type=='exp' && t.linkId){
-                const src = appData.txs.find(x=>x.id==t.linkId);
-                if(src) extra = `<span style="color:var(--primary); font-weight:600;"><i class="fas fa-link"></i> ${src.desc.substring(0,8)}</span>`;
-            }
-
-            row.innerHTML = `
-                <div>
-                    <div class="r-main">${t.desc}</div>
-                    <div class="r-sub"><span class="tag">${t.cat}</span> <span>Día ${t.date.split('-')[2]}</span> ${extra}</div>
-                </div>
-                <div style="text-align:right">
-                    <div class="num" style="font-size:15px; color:var(--${t.type})">$${fmt(t.amount)}</div>
-                    ${t.type=='exp' ? `<div style="font-size:10px; color:${rb>=0?'var(--inc)':'var(--exp)'}">Q: $${fmt(rb)}</div>` : ''}
-                </div>
-            `;
-            (t.type=='inc'?lI:lE).appendChild(row);
+            const r = document.createElement('div');
+            r.className = `row ${t.exec?'executed':''}`;
+            r.onclick = () => editTx(t.id);
+            r.innerHTML = `<div><div class="r-main">${t.desc}</div><div class="r-sub"><span class="tag">${t.cat}</span> <span>${t.date.split('-')[2]}</span></div></div><div style="text-align:right"><div class="num" style="color:var(--${t.type})">$${fmt(t.amount)}</div>${t.type=='exp'?`<div style="font-size:9px; color:${rb>=0?'var(--inc)':'var(--exp)'}">Q: $${fmt(rb)}</div>`:''}</div>`;
+            (t.type=='inc'?lI:lE).appendChild(r);
         });
         document.getElementById('c-inc').innerText = txs.filter(t=>t.type=='inc').length;
         document.getElementById('c-exp').innerText = txs.filter(t=>t.type=='exp').length;
-    }
 
-    function renderAllocation(txs) {
-        const c = document.getElementById('list-alloc'); c.innerHTML='';
+        // Allocations
         const incs = txs.filter(t=>t.type=='inc');
-        if(!incs.length) c.innerHTML='<div style="padding:20px; text-align:center; color:var(--txt-dim)">Sin ingresos registrados</div>';
-        
+        if(!incs.length) lA.innerHTML='<div style="padding:10px;text-align:center;color:#999">Sin ingresos</div>';
         incs.forEach(inc => {
             const subs = txs.filter(t=>t.type=='exp' && t.linkId==inc.id);
             const spent = subs.reduce((a,b)=>a+b.amount,0);
             const rem = inc.amount - spent;
             const pct = Math.min(100, (spent/inc.amount)*100);
-            const color = rem < 0 ? 'var(--exp)' : (pct>90?'#F59E0B':'var(--inc)');
             
+            // FIXED STRIKETHROUGH LOGIC: Check 's.exec' and add 'executed' class
             let rows = '';
-            subs.forEach(s => rows += `<div class="a-row ${s.exec?'done':''}" onclick="editTx(${s.id})"><span>${s.desc}</span><span class="num">$${fmt(s.amount)}</span></div>`);
+            subs.forEach(s => rows+=`<div class="a-row ${s.exec?'executed':''}" onclick="editTx(${s.id})"><span>${s.desc}</span><span class="num">$${fmt(s.amount)}</span></div>`);
 
-            c.innerHTML += `
+            lA.innerHTML += `
                 <div class="a-box">
                     <div class="a-head" onclick="this.parentElement.classList.toggle('open')">
-                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; color:var(--txt)">
-                            <span>${inc.desc}</span>
-                            <span class="num" style="color:${color}">R: $${fmt(rem)}</span>
-                        </div>
-                        <div class="a-bar"><div class="a-fill" style="width:${pct}%; background:${color}"></div></div>
-                        <div style="font-size:10px; color:var(--txt-dim); margin-top:4px; display:flex; justify-content:space-between;">
-                            <span>Asignado: ${Math.round(pct)}%</span>
-                            <span>Total: $${fmt(inc.amount)}</span>
-                        </div>
+                        <div style="display:flex;justify-content:space-between;font-weight:700;"><span>${inc.desc}</span><span class="num" style="color:${rem<0?'var(--exp)':'var(--inc)'}">R: $${fmt(rem)}</span></div>
+                        <div class="a-bar"><div class="a-fill" style="width:${pct}%; background:${rem<0?'var(--exp)':'var(--inc)'}"></div></div>
                     </div>
-                    <div class="a-body">${rows || '<div style="padding:10px 20px; font-size:11px; color:#aaa">Vacío</div>'}</div>
-                </div>
-            `;
-        });
-    }
-
-    // --- TAB 2: VISUALS ---
-    function renderVisuals(txs) {
-        // 1. TIMELINE CHART (BARS PER DAY)
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0).getDate();
-        const labels = Array.from({length: daysInMonth}, (_, i) => (i + 1).toString());
-        const dataPending = new Array(daysInMonth).fill(0);
-        const dataPaid = new Array(daysInMonth).fill(0);
-
-        txs.filter(t=>t.type=='exp').forEach(t => {
-            const d = parseInt(t.date.split('-')[2]) - 1;
-            if(d >= 0 && d < daysInMonth) {
-                if(t.exec) dataPaid[d] += t.amount;
-                else dataPending[d] += t.amount;
-            }
-        });
-
-        if(cTime) cTime.destroy();
-        cTime = new Chart(document.getElementById('chartTime'), {
-            type: 'bar',
-            data: {
-                labels,
-                datasets: [
-                    { label: 'Pagado', data: dataPaid, backgroundColor: '#CBD5E1', stack:'a' },
-                    { label: 'Pendiente', data: dataPending, backgroundColor: '#EF4444', stack:'a' }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { x: { stacked: true, grid:{display:false} }, y: { stacked: true, beginAtZero: true } },
-                plugins: { legend: { position:'bottom' } }
-            }
-        });
-
-        // 2. DOUGHNUTS
-        renderPie(document.getElementById('chartExp'), document.getElementById('legExp'), txs.filter(t=>t.type=='exp'), 'cat', true, cExp, (i)=>cExp=i);
-        renderPie(document.getElementById('chartInc'), document.getElementById('legInc'), txs.filter(t=>t.type=='inc'), 'desc', false, cInc, (i)=>cInc=i);
-    }
-
-    function renderPie(cvs, leg, dataSet, key, drill, instance, setInstance) {
-        if(instance) instance.destroy();
-        let map = {};
-        
-        if(drill && drillCat) dataSet.filter(t=>t.cat==drillCat).forEach(t=>map[t.desc]=(map[t.desc]||0)+t.amount);
-        else dataSet.forEach(t=>map[t[key]]=(map[t[key]]||0)+t.amount);
-
-        const entries = Object.entries(map).sort((a,b)=>b[1]-a[1]);
-        const labels = entries.map(e=>e[0]), data = entries.map(e=>e[1]), total = data.reduce((a,b)=>a+b,0);
-
-        setInstance(new Chart(cvs, {
-            type: 'doughnut',
-            data: { labels, datasets: [{ data, backgroundColor: PAL, borderWidth:0 }] },
-            options: { 
-                responsive: true, maintainAspectRatio: false, cutout: '70%', 
-                plugins: { legend: { display: false } },
-                onClick: (e,el) => { if(drill && !drillCat && el.length) { drillCat=labels[el[0].index]; loadMonthData(); }}
-            }
-        }));
-
-        leg.innerHTML = '';
-        entries.forEach((e,i) => {
-            const pct = total>0 ? Math.round((e[1]/total)*100) : 0;
-            leg.innerHTML += `
-                <div class="l-itm" onclick="${drill && !drillCat ? `drillCat='${e[0]}';loadMonthData()` : ''}">
-                    <div class="dot" style="background:${PAL[i%PAL.length]}"></div>
-                    <div style="flex:1"><b>${e[0]}</b></div>
-                    <div>$${fmt(e[1])} (${pct}%)</div>
+                    <div class="a-body">${rows||'<small style="padding:5px 12px;display:block;color:#ccc">Vacío</small>'}</div>
                 </div>`;
         });
     }
 
-    function resetCharts() { drillCat=null; loadMonthData(); }
+    function renderVisuals(txs) {
+        // 1. CASH FLOW (Income vs Expenses per day)
+        const days = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0).getDate();
+        const lbs = Array.from({length:days},(_,i)=>i+1);
+        const dInc = new Array(days).fill(0), dExp = new Array(days).fill(0);
 
-    // --- MODAL & LOGIC ---
+        txs.forEach(t => {
+            const d = parseInt(t.date.split('-')[2])-1;
+            if(d>=0 && d<days) { if(t.type=='inc') dInc[d]+=t.amount; else dExp[d]+=t.amount; }
+        });
+
+        if(cFlow) cFlow.destroy();
+        cFlow = new Chart(document.getElementById('chartFlow'), {
+            type: 'bar',
+            data: { 
+                labels: lbs, 
+                datasets: [
+                    { label:'Ingresos', data:dInc, backgroundColor:'#10B981', borderRadius:2 },
+                    { label:'Gastos', data:dExp, backgroundColor:'#EF4444', borderRadius:2 }
+                ] 
+            },
+            options: { responsive:true, maintainAspectRatio:false, scales:{x:{grid:{display:false}}, y:{beginAtZero:true}}, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:10}}} }
+        });
+
+        // 2. PIES
+        renderPie(document.getElementById('chartExp'), txs.filter(t=>t.type=='exp'), 'cat', true, cExp, (i)=>cExp=i);
+        renderPie(document.getElementById('chartInc'), txs.filter(t=>t.type=='inc'), 'desc', false, cInc, (i)=>cInc=i);
+    }
+
+    function renderPie(cvs, dataSet, key, drill, inst, setInst) {
+        if(inst) inst.destroy();
+        let map={};
+        if(drill && drillCat) dataSet.filter(t=>t.cat==drillCat).forEach(t=>map[t.desc]=(map[t.desc]||0)+t.amount);
+        else dataSet.forEach(t=>map[t[key]]=(map[t[key]]||0)+t.amount);
+        
+        const ent = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+        setInst(new Chart(cvs, {
+            type: 'doughnut',
+            data: { labels: ent.map(e=>e[0]), datasets: [{ data: ent.map(e=>e[1]), backgroundColor: PAL, borderWidth:0 }] },
+            options: { responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'right', labels:{boxWidth:10, font:{size:10}}}} }
+        }));
+    }
+
+    function resetCharts(){ drillCat=null; loadMonthData(); }
+
+    // MODAL
     function openModal(){ editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
     function closeModal(e){ if(!e || e.target.id=='modalOverlay' || e.target.tagName=='I') document.getElementById('modalOverlay').classList.remove('open'); }
 
@@ -457,77 +384,68 @@
         document.getElementById('btnExp').className = `seg-btn ${t=='exp'?'active exp':''}`;
         document.getElementById('btnInc').className = `seg-btn ${t=='inc'?'active inc':''}`;
         
-        const box = document.getElementById('chipBox'); box.innerHTML='';
-        (appData.cats[t]||[]).forEach(c => {
+        const b=document.getElementById('chipBox'); b.innerHTML='';
+        (appData.cats[t]||[]).forEach(c=>{
             const el=document.createElement('div'); el.className='chip'; el.innerText=c;
-            el.onclick=()=>selectCat(c, el);
-            box.appendChild(el);
+            el.onclick=()=>selectCat(c,el); b.appendChild(el);
         });
-        const add=document.createElement('div'); add.className='chip add'; add.innerText='+';
-        add.onclick=()=>{ const n=prompt('Nueva Categoría:'); if(n){ if(!appData.cats[t])appData.cats[t]=[]; appData.cats[t].push(n); saveData(); setType(t); }};
-        box.appendChild(add);
+        const add=document.createElement('div'); add.className='chip'; add.innerText='+'; add.style.borderStyle='dashed';
+        add.onclick=()=>{const n=prompt('Nueva');if(n){if(!appData.cats[t])appData.cats[t]=[];appData.cats[t].push(n);saveData();setType(t);}};
+        b.appendChild(add);
 
         document.getElementById('linkRow').style.display=t=='exp'?'block':'none';
         if(t=='exp') renderLinkOpts();
         
-        const dl = document.getElementById('dlConc'); dl.innerHTML='';
+        const dl=document.getElementById('dlConc'); dl.innerHTML='';
         Object.values(appData.concepts).flat().forEach(c=>dl.appendChild(new Option(c)));
-        selectCat('');
     }
 
-    function selectCat(c, el){
-        document.getElementById('fCat').value=c;
-        document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-        if(el) el.classList.add('active');
-    }
+    function selectCat(c,el){ document.getElementById('fCat').value=c; document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); if(el)el.classList.add('active'); }
 
     function renderLinkOpts(sel){
-        const s = document.getElementById('fLink'); s.innerHTML='<option value="">-- Sin Asignar --</option>';
+        const s=document.getElementById('fLink'); s.innerHTML='<option value="">-- Sin Asignar --</option>';
         const y=currentDate.getFullYear(), m=currentDate.getMonth()+1;
         appData.txs.filter(t=>!t.deletedAt && t.type=='inc' && parseInt(t.date.split('-')[1])==m).forEach(i=>{
-            const sp = appData.txs.filter(x=>!x.deletedAt && x.type=='exp' && x.linkId==i.id && x.id!=editId).reduce((a,b)=>a+b.amount,0);
+            const sp=appData.txs.filter(x=>!x.deletedAt && x.type=='exp' && x.linkId==i.id && x.id!=editId).reduce((a,b)=>a+b.amount,0);
             s.add(new Option(`${i.desc} (Disp: $${fmt(i.amount-sp)})`, i.id));
         });
-        if(sel) s.value=sel;
+        if(sel)s.value=sel;
     }
 
-    document.getElementById('txForm').onsubmit = e => {
+    document.getElementById('txForm').onsubmit=e=>{
         e.preventDefault();
-        const cat = document.getElementById('fCat').value;
-        const desc = document.getElementById('fDesc').value;
-        if(!cat) return alert("Selecciona Categoría");
-        const tx = {
-            id: editId||Date.now(),
-            date: document.getElementById('fDate').value,
-            amount: parseFloat(document.getElementById('fAmt').value),
-            type: document.getElementById('fType').value,
-            cat, desc,
-            exec: document.getElementById('fExec').checked,
-            linkId: document.getElementById('fType').value=='exp'?document.getElementById('fLink').value:null,
-            deletedAt: null
+        const cat=document.getElementById('fCat').value, desc=document.getElementById('fDesc').value;
+        if(!cat)return alert("Categoría?");
+        const tx={
+            id:editId||Date.now(), date:document.getElementById('fDate').value,
+            amount:parseFloat(document.getElementById('fAmt').value), type:document.getElementById('fType').value,
+            cat, desc, exec:document.getElementById('fExec').checked,
+            linkId:document.getElementById('fType').value=='exp'?document.getElementById('fLink').value:null, deletedAt:null
         };
-        if(!appData.concepts[cat]) appData.concepts[cat]=[]; if(!appData.concepts[cat].includes(desc)) appData.concepts[cat].push(desc);
-        if(editId){ const i=appData.txs.findIndex(x=>x.id==editId); appData.txs[i]=tx; } else appData.txs.push(tx);
+        if(!appData.concepts[cat])appData.concepts[cat]=[]; if(!appData.concepts[cat].includes(desc))appData.concepts[cat].push(desc);
+        if(editId){const i=appData.txs.findIndex(x=>x.id==editId); appData.txs[i]=tx;} else appData.txs.push(tx);
         saveData(); closeModal({target:document.getElementById('modalOverlay')});
     }
 
     function editTx(id){
-        const t = appData.txs.find(x=>x.id==id); if(!t)return;
-        editId=id; document.getElementById('modalTitle').innerText='Editar'; document.getElementById('btnDel').style.display='block';
-        document.getElementById('fAmt').value=t.amount; document.getElementById('fDate').value=t.date; document.getElementById('fDesc').value=t.desc; document.getElementById('fExec').checked=t.exec;
+        const t=appData.txs.find(x=>x.id==id); if(!t)return; editId=id;
+        document.getElementById('modalTitle').innerText='Editar'; document.getElementById('btnDel').style.display='block';
+        document.getElementById('fAmt').value=t.amount; document.getElementById('fDate').value=t.date;
+        document.getElementById('fDesc').value=t.desc; document.getElementById('fExec').checked=t.exec;
         setType(t.type);
-        const cs = document.querySelectorAll('.chip'); for(let c of cs) if(c.innerText==t.cat) selectCat(t.cat, c);
-        if(t.type=='exp') renderLinkOpts(t.linkId);
+        const cs=document.querySelectorAll('.chip'); for(let c of cs)if(c.innerText==t.cat)selectCat(t.cat,c);
+        if(t.type=='exp')renderLinkOpts(t.linkId);
         document.getElementById('modalOverlay').classList.add('open');
     }
 
-    function resetForm(){ document.getElementById('txForm').reset(); document.getElementById('modalTitle').innerText='Nuevo'; document.getElementById('btnDel').style.display='none'; document.getElementById('fDate').value=new Date().toISOString().split('T')[0]; }
-
-    function calcKPI(txs, tc){
+    function resetForm(){document.getElementById('txForm').reset();document.getElementById('modalTitle').innerText='Nuevo';document.getElementById('btnDel').style.display='none';document.getElementById('fDate').value=new Date().toISOString().split('T')[0];}
+    
+    function calcKPI(txs){
+        const tc=parseFloat(document.getElementById('usdRate').value)||1200;
         const i=txs.filter(t=>t.type=='inc').reduce((a,b)=>a+b.amount,0);
         const e=txs.filter(t=>t.type=='exp').reduce((a,b)=>a+b.amount,0);
-        const b=i-e;
-        document.getElementById('k-inc').innerText='$'+fmt(i); document.getElementById('k-exp').innerText='$'+fmt(e); document.getElementById('k-bal').innerText='$'+fmt(b); document.getElementById('k-usd').innerText='USD '+fmt(b/tc);
+        document.getElementById('k-inc').innerText='$'+fmt(i); document.getElementById('k-exp').innerText='$'+fmt(e);
+        document.getElementById('k-bal').innerText='$'+fmt(i-e); document.getElementById('k-usd').innerText='USD '+fmt((i-e)/tc);
     }
     
     function changeMonth(d){ currentDate.setMonth(currentDate.getMonth()+d); updateDateUI(); loadMonthData(); }
@@ -535,22 +453,19 @@
     function updateDateUI(){ document.getElementById('monthTxt').innerText=`${MONTHS[currentDate.getMonth()]} ${currentDate.getFullYear()}`; document.getElementById('datePicker').value=`${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2,'0')}`; }
     function updateMonthTC() { appData.rates[`${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2,'0')}`]=document.getElementById('usdRate').value; saveData(); }
     function delTx(){ if(confirm('Borrar?')){ appData.txs.find(x=>x.id==editId).deletedAt=Date.now(); saveData(); closeModal({target:document.getElementById('modalOverlay')}); }}
-    function clearMonth(){ if(confirm('Borrar mes completo?')){ const y=currentDate.getFullYear(), m=currentDate.getMonth()+1; appData.txs.forEach(t=>{if(parseInt(t.date.split('-')[0])==y && parseInt(t.date.split('-')[1])==m) t.deletedAt=Date.now();}); saveData(); }}
+    function clearMonth(){ if(confirm('Borrar todo?')){ const y=currentDate.getFullYear(), m=currentDate.getMonth()+1; appData.txs.forEach(t=>{if(parseInt(t.date.split('-')[0])==y && parseInt(t.date.split('-')[1])==m) t.deletedAt=Date.now();}); saveData(); }}
     function cloneMonth(){
-        const s = document.getElementById('cloneSrc').value; if(!s) return alert("Selecciona mes origen");
-        if(!confirm("Copiar?")) return;
-        const [sy, sm] = s.split('-').map(Number);
-        const src = appData.txs.filter(t=>!t.deletedAt && parseInt(t.date.split('-')[0])==sy && parseInt(t.date.split('-')[1])==sm);
-        const tgt = document.getElementById('datePicker').value + '-01';
-        let map={}; let n=[];
-        src.filter(t=>t.type=='inc').forEach(t=>{const id=Date.now()+Math.random(); map[t.id]=id; n.push({...t, id, date:tgt, exec:false});});
-        src.filter(t=>t.type=='exp').forEach(t=>{const id=Date.now()+Math.random(); n.push({...t, id, date:tgt, exec:false, linkId:t.linkId?map[t.linkId]:null});});
+        const s=document.getElementById('cloneSrc').value; if(!s)return alert("Mes?");
+        if(!confirm("Copiar?"))return;
+        const [sy,sm]=s.split('-').map(Number);
+        const src=appData.txs.filter(t=>!t.deletedAt && parseInt(t.date.split('-')[0])==sy && parseInt(t.date.split('-')[1])==sm);
+        const tgt=document.getElementById('datePicker').value+'-01';
+        let map={}, n=[];
+        src.filter(t=>t.type=='inc').forEach(t=>{const id=Date.now()+Math.random(); map[t.id]=id; n.push({...t,id,date:tgt,exec:false});});
+        src.filter(t=>t.type=='exp').forEach(t=>{const id=Date.now()+Math.random(); n.push({...t,id,date:tgt,exec:false,linkId:t.linkId?map[t.linkId]:null});});
         appData.txs.push(...n); saveData();
     }
-    function nav(v){
-        document.querySelectorAll('.view').forEach(e=>e.classList.remove('active')); document.getElementById(`v-${v}`).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active')); event.currentTarget.classList.add('active');
-    }
+    function nav(v){ document.querySelectorAll('.view').forEach(e=>e.classList.remove('active')); document.getElementById(`v-${v}`).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active')); event.currentTarget.classList.add('active'); }
 </script>
 </body>
 </html>
