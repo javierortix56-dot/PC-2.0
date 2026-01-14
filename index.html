@@ -3,236 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J&M Finance OS V5 - Grid Layout</title>
+    <title>J&M Finance OS V6</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-body: #F3F4F6;
-            --surface: #FFFFFF;
-            --sidebar: #111827;
-            --primary: #4F46E5;
-            --inc: #059669; --inc-bg: #ECFDF5;
-            --exp: #DC2626; --exp-bg: #FEF2F2;
-            --txt-main: #1F2937;
-            --txt-sec: #6B7280;
-            --border: #E5E7EB;
-            --radius: 8px;
+            --bg: #F8FAFC; --surface: #FFFFFF; --sidebar: #0F172A;
+            --txt: #1E293B; --txt-sec: #64748B;
+            --inc: #10B981; --exp: #EF4444; --primary: #4F46E5;
+            --border: #E2E8F0; --radius: 10px;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--txt-main); margin: 0; height: 100vh; display: flex; font-size: 13px; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); margin: 0; height: 100vh; display: flex; font-size: 13px; overflow: hidden; }
         .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-weight: 600; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; } 
-        ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
 
         /* SIDEBAR */
-        .sidebar { width: 56px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 16px 0; z-index: 50; flex-shrink: 0; }
-        .nav-btn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; color: #9CA3AF; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-        .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: white; }
-        .nav-btn.active { color: var(--primary); background: white; }
+        .sidebar { width: 64px; background: var(--sidebar); display: flex; flex-direction: column; align-items: center; padding: 20px 0; flex-shrink: 0; z-index: 50; }
+        .nav-btn { width: 40px; height: 40px; border-radius: 10px; color: #94A3B8; cursor: pointer; display: grid; place-items: center; margin-bottom: 12px; transition: 0.2s; font-size: 16px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79,70,229,0.4); }
 
-        /* MAIN LAYOUT */
+        /* MAIN */
         .main { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
 
         /* HEADER */
-        .header { height: 50px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; }
-        .date-selector { display: flex; align-items: center; gap: 8px; background: var(--bg-body); padding: 4px; border-radius: 6px; border: 1px solid var(--border); }
-        .ds-btn { border: none; background: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; color: var(--txt-sec); display: grid; place-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .ds-val { font-weight: 600; font-size: 13px; min-width: 100px; text-align: center; position: relative; }
-        .ds-picker { position: absolute; inset:0; opacity:0; cursor: pointer; width: 100%; }
-
-        /* KPI BAR */
-        .kpi-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px 20px 0 20px; flex-shrink: 0; }
-        .kpi { background: var(--surface); padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
-        .kpi-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--txt-sec); margin-bottom: 2px; }
-        .kpi-val { font-size: 16px; font-weight: 700; color: var(--txt-main); }
-
-        /* DASHBOARD GRID (The Layout Fix) */
-        .viewport { padding: 16px 20px; overflow: hidden; height: 100%; display: none; }
-        .viewport.active { display: grid; }
+        .header { height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+        .date-box { display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border); }
+        .d-btn { width: 24px; height: 24px; border: none; background: white; border-radius: 6px; cursor: pointer; color: var(--txt-sec); display: grid; place-items: center; }
+        .d-txt { font-weight: 700; font-size: 13px; min-width: 110px; text-align: center; position: relative; }
+        .d-pk { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
         
-        #view-home { 
-            grid-template-columns: 1.6fr 1fr; /* Izquierda mas ancha para listas */
-            grid-template-rows: 1fr; 
-            gap: 16px; 
-            height: 100%;
-        }
+        /* KPI STRIP */
+        .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 16px 24px 0 24px; flex-shrink: 0; }
+        .k-card { background: var(--surface); padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .k-lbl { font-size: 10px; font-weight: 700; color: var(--txt-sec); text-transform: uppercase; margin-bottom: 4px; }
+        .k-val { font-size: 18px; font-weight: 800; }
 
-        /* Columna Izquierda: Ledger (Dividida verticalmente) */
-        .col-left { display: grid; grid-template-rows: auto 1fr; gap: 16px; height: 100%; overflow: hidden; }
+        /* VIEWPORTS */
+        .view { display: none; padding: 20px 24px; height: 100%; overflow: hidden; }
+        .view.active { display: grid; }
+
+        /* --- PESTAÑA 1: DIARIO (CUENTA T) --- */
+        #v-diary { grid-template-columns: 1fr 1fr; gap: 20px; grid-template-rows: 1fr; }
+        .col-t { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; height: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .col-h { padding: 14px 16px; background: #FAFAFA; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 12px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .col-b { flex: 1; overflow-y: auto; }
         
-        /* Columna Derecha: Analysis (Dividida verticalmente) */
-        .col-right { display: grid; grid-template-rows: 1fr auto; gap: 16px; height: 100%; overflow: hidden; }
+        .tx-row { padding: 10px 16px; border-bottom: 1px solid var(--bg); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.1s; }
+        .tx-row:hover { background: #F1F5F9; }
+        .tx-row.done { opacity: 0.5; } .tx-row.done .tx-d { text-decoration: line-through; }
+        .tx-d { font-weight: 600; font-size: 13px; color: var(--txt); margin-bottom: 2px; }
+        .tx-m { font-size: 11px; color: var(--txt-sec); display: flex; gap: 6px; align-items: center; }
+        .pill { background: var(--bg); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); font-size: 10px; font-weight: 500; }
 
-        .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-        .card-h { padding: 10px 14px; background: #FAFAFA; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--txt-sec); flex-shrink: 0; }
-        .card-b { flex: 1; overflow-y: auto; position: relative; }
+        /* --- PESTAÑA 2: ANÁLISIS --- */
+        #v-analysis { grid-template-columns: 350px 1fr; gap: 20px; overflow-y: auto; display: grid; grid-template-rows: auto; }
+        .an-panel { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; }
+        .chart-box { height: 250px; position: relative; margin-bottom: 10px; }
+        .legend-box { max-height: 100px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px; }
+        .l-item { font-size: 10px; padding: 2px 6px; background: var(--bg); border-radius: 4px; display: flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid transparent; }
+        .l-item:hover { border-color: var(--txt-sec); }
+        .l-color { width: 8px; height: 8px; border-radius: 50%; }
 
-        /* List Items */
-        .tx-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--bg-body); cursor: pointer; transition: 0.1s; font-size: 12px; }
-        .tx-row:hover { background: #F9FAFB; }
-        .tx-row:last-child { border-bottom: none; }
-        .tx-row.executed { opacity: 0.5; } .tx-row.executed .tx-main { text-decoration: line-through; }
-        
-        .tx-main { font-weight: 500; color: var(--txt-main); margin-bottom: 2px; }
-        .tx-sub { font-size: 10px; color: var(--txt-sec); display: flex; gap: 6px; align-items: center; }
-        .tag { padding: 1px 4px; border-radius: 3px; background: var(--bg-body); border: 1px solid var(--border); font-weight: 500; }
-        .link-badge { color: var(--primary); background: var(--primary-soft); padding: 1px 4px; border-radius: 3px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+        /* Allocation List */
+        .al-row { padding: 8px 0; border-bottom: 1px solid var(--bg); }
+        .al-h { display: flex; justify-content: space-between; font-weight: 600; font-size: 12px; cursor: pointer; align-items: center; }
+        .al-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+        .al-fill { height: 100%; }
+        .al-det { display: none; margin-top: 8px; padding-left: 10px; border-left: 2px solid var(--border); }
+        .al-row.open .al-det { display: block; }
 
-        /* Allocation "Compact" Style */
-        .alloc-item { border-bottom: 1px solid var(--border); }
-        .ai-head { padding: 10px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: white; }
-        .ai-head:hover { background: #FAFAFA; }
-        .ai-info { flex: 1; }
-        .ai-bar-bg { height: 4px; background: #F3F4F6; border-radius: 2px; margin-top: 6px; overflow: hidden; width: 100%; }
-        .ai-bar-fill { height: 100%; transition: width 0.3s ease; }
-        
-        .ai-body { display: none; background: #F9FAFB; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        .alloc-item.open .ai-body { display: block; border-top: 1px solid var(--border); }
-        .ai-subrow { padding: 6px 14px 6px 30px; border-bottom: 1px dashed var(--border); font-size: 11px; display: flex; justify-content: space-between; color: var(--txt-sec); }
-
-        /* Chart Area */
-        .chart-container { height: 220px; padding: 12px; position: relative; }
-        .legend { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px 12px; max-height: 80px; overflow-y: auto; }
-        .l-item { font-size: 10px; display: flex; align-items: center; gap: 4px; color: var(--txt-sec); background: var(--bg-body); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
-
-        /* MODAL */
-        .modal-ol { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        /* --- MODAL CON CHIPS --- */
+        .modal-ol { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-ol.open { display: flex; }
-        .modal { background: white; width: 400px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; }
-        .m-head { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; background: #FAFAFA; }
-        .m-body { padding: 16px; max-height: 70vh; overflow-y: auto; }
-        
-        .inp-grp { margin-bottom: 14px; }
-        .inp-lbl { font-size: 11px; font-weight: 600; color: var(--txt-sec); margin-bottom: 6px; display: block; }
-        .inp { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 13px; }
-        .inp:focus { border-color: var(--primary); ring: 2px solid var(--primary-soft); }
-        
-        .btn-toggle-grp { display: flex; background: var(--bg-body); padding: 3px; border-radius: 8px; margin-bottom: 16px; }
-        .btn-toggle { flex: 1; border: none; background: transparent; padding: 6px; font-size: 12px; font-weight: 600; color: var(--txt-sec); cursor: pointer; border-radius: 6px; }
-        .btn-toggle.active { background: white; color: var(--txt-main); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .btn-toggle.active.inc { color: var(--inc); }
-        .btn-toggle.active.exp { color: var(--exp); }
+        .modal { background: white; width: 450px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .m-head { padding: 16px 20px; background: #F8FAFC; border-bottom: 1px solid var(--border); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .m-body { padding: 20px; overflow-y: auto; }
 
-        .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-        .chip { font-size: 11px; padding: 4px 10px; border-radius: 12px; background: var(--bg-body); border: 1px solid var(--border); cursor: pointer; color: var(--txt-sec); }
+        .type-sw { display: flex; background: var(--bg); padding: 4px; border-radius: 8px; margin-bottom: 20px; }
+        .ts-btn { flex: 1; border: none; background: transparent; padding: 8px; font-weight: 600; color: var(--txt-sec); cursor: pointer; border-radius: 6px; }
+        .ts-btn.active { background: white; color: var(--txt); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .ts-btn.active.inc { color: var(--inc); border-bottom: 2px solid var(--inc); }
+        .ts-btn.active.exp { color: var(--exp); border-bottom: 2px solid var(--exp); }
+
+        .chip-area { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .chip { font-size: 11px; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; color: var(--txt-sec); font-weight: 500; transition: 0.2s; }
+        .chip:hover { border-color: var(--txt-sec); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .chip.add { border-style: dashed; background: white; color: var(--primary); }
+
+        .inp-row { margin-bottom: 14px; }
+        .lbl { font-size: 11px; font-weight: 700; color: var(--txt-sec); margin-bottom: 5px; display: block; }
+        .inp { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; }
         
-        .fab { position: fixed; bottom: 24px; right: 24px; width: 50px; height: 50px; background: var(--txt-main); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; border: none; transition: transform 0.2s; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 24px; box-shadow: 0 8px 16px rgba(79,70,229,0.3); cursor: pointer; border: none; transition: 0.2s; z-index: 80; }
         .fab:hover { transform: scale(1.05); }
 
         @media (max-width: 900px) {
-            #view-home { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; overflow-y: auto; }
-            .col-left, .col-right { grid-template-rows: auto; height: auto; overflow: visible; }
-            .main { overflow-y: auto; }
-            .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+            #v-diary { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+            #v-analysis { grid-template-columns: 1fr; }
+            .kpis { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div id="loader" style="position:fixed; inset:0; background:white; z-index:200; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="width:20px; height:20px; border:2px solid #E5E7EB; border-top-color:#111827; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-    <div style="margin-top:10px; font-size:11px; color:#6B7280; font-weight:600">Sincronizando...</div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="loader" style="position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:200; display:flex; align-items:center; justify-content:center; flex-direction:column; display:none;">
+    <i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary)"></i>
 </div>
 
 <aside class="sidebar">
-    <div class="nav-btn active" onclick="nav('home')"><i class="fas fa-columns"></i></div>
-    <div class="nav-btn" onclick="nav('admin')"><i class="fas fa-cog"></i></div>
-    <div class="nav-btn" onclick="forceSync()" style="margin-top:auto"><i class="fas fa-sync-alt"></i></div>
+    <div class="nav-btn active" onclick="nav('diary')"><i class="fas fa-book"></i></div>
+    <div class="nav-btn" onclick="nav('analysis')"><i class="fas fa-chart-pie"></i></div>
+    <div class="nav-btn" onclick="nav('admin')"><i class="fas fa-tools"></i></div>
+    <div class="nav-btn" onclick="forceSync()" style="margin-top:auto"><i class="fas fa-sync"></i></div>
 </aside>
 
 <main class="main">
     <header class="header">
-        <div class="date-selector">
-            <button class="ds-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-            <div class="ds-val">
-                <span id="monthTxt">...</span>
-                <input type="month" id="datePicker" class="ds-picker" onchange="manualDate()">
-            </div>
-            <button class="ds-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+        <div class="date-box">
+            <button class="d-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="d-txt"><span id="monthTxt">...</span><input type="month" id="datePicker" class="d-pk" onchange="manualDate()"></div>
+            <button class="d-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:11px; font-weight:600; color:var(--txt-sec)">TC:</span>
-            <input type="number" id="usdRate" value="1200" onchange="updateMonthTC()" style="width:50px; border:none; background:transparent; font-weight:700; text-align:right;">
+        <div style="display:flex; align-items:center; font-size:12px; font-weight:600;">
+            <span style="color:var(--txt-sec); margin-right:5px;">TC:</span>
+            <input type="number" id="usdRate" value="1200" onchange="updateMonthTC()" style="width:60px; border:none; background:transparent; font-weight:700; text-align:right;">
         </div>
     </header>
 
-    <div class="kpi-bar">
-        <div class="kpi" style="border-left: 3px solid #111827;">
-            <span class="kpi-lbl">Balance Total</span>
-            <span class="kpi-val num" id="kpiBal">$0</span>
+    <div class="kpis">
+        <div class="k-card"><div class="k-lbl">Balance</div><div class="k-val num" id="k-bal">$0</div></div>
+        <div class="k-card"><div class="k-lbl">USD Est.</div><div class="k-val num" id="k-usd" style="color:#0EA5E9">$0</div></div>
+        <div class="k-card" style="border-left:3px solid var(--inc)"><div class="k-lbl">Ingresos</div><div class="k-val num" id="k-inc" style="color:var(--inc)">$0</div></div>
+        <div class="k-card" style="border-left:3px solid var(--exp)"><div class="k-lbl">Gastos</div><div class="k-val num" id="k-exp" style="color:var(--exp)">$0</div></div>
+    </div>
+
+    <div id="v-diary" class="view active">
+        <div class="col-t">
+            <div class="col-h"><span style="color:var(--inc)">Ingresos</span><span id="c-inc" class="pill">0</span></div>
+            <div class="col-b" id="list-inc"></div>
         </div>
-        <div class="kpi">
-            <span class="kpi-lbl">USD Estimado</span>
-            <span class="kpi-val num" id="kpiUsd" style="color:#0EA5E9">$0</span>
-        </div>
-        <div class="kpi" style="border-left: 3px solid var(--inc);">
-            <span class="kpi-lbl">Ingresos</span>
-            <span class="kpi-val num" id="sum-inc" style="color:var(--inc)">$0</span>
-        </div>
-        <div class="kpi" style="border-left: 3px solid var(--exp);">
-            <span class="kpi-lbl">Gastos</span>
-            <span class="kpi-val num" id="sum-exp" style="color:var(--exp)">$0</span>
+        <div class="col-t">
+            <div class="col-h"><span style="color:var(--exp)">Gastos</span><span id="c-exp" class="pill">0</span></div>
+            <div class="col-b" id="list-exp"></div>
         </div>
     </div>
 
-    <div id="view-home" class="viewport active">
+    <div id="v-analysis" class="view">
         
-        <div class="col-left">
-            <div class="card" style="max-height: 250px;">
-                <div class="card-h">
-                    <span style="color:var(--inc)"><i class="fas fa-arrow-down"></i> Ingresos</span>
-                    <span id="cnt-inc" class="tag">0</span>
-                </div>
-                <div class="card-b" id="list-inc"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-h">
-                    <span style="color:var(--exp)"><i class="fas fa-arrow-up"></i> Gastos</span>
-                    <span id="cnt-exp" class="tag">0</span>
-                </div>
-                <div class="card-b" id="list-exp"></div>
-            </div>
+        <div class="an-panel">
+            <div style="font-weight:700; margin-bottom:15px; font-size:14px;">ASIGNACIÓN DE FONDOS</div>
+            <div id="allocList"></div>
         </div>
 
-        <div class="col-right">
-            <div class="card">
-                <div class="card-h">
-                    <span><i class="fas fa-wallet"></i> Asignación (Fuentes)</span>
+        <div style="display:grid; grid-template-rows: 1fr 1fr; gap:20px;">
+            <div class="an-panel">
+                <div style="font-weight:700; margin-bottom:10px; display:flex; justify-content:space-between;">
+                    <span>GASTOS POR CATEGORÍA</span>
+                    <button onclick="resetCharts()" style="border:none; background:none; color:var(--primary); font-size:10px; cursor:pointer;">RESET</button>
                 </div>
-                <div class="card-b" id="allocList"></div>
+                <div class="chart-box"><canvas id="chartExp"></canvas></div>
+                <div class="legend-box" id="legExp"></div>
             </div>
-
-            <div class="card" style="flex-shrink:0;">
-                <div class="card-h">
-                    <span>Distribución</span>
-                    <button id="btnResetChart" onclick="resetChart()" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:10px; font-weight:700; display:none;">RESET</button>
-                </div>
-                <div class="chart-container"><canvas id="mainChart"></canvas></div>
-                <div class="legend" id="chartLegend"></div>
+            
+            <div class="an-panel">
+                <div style="font-weight:700; margin-bottom:10px;">INGRESOS POR CONCEPTO</div>
+                <div class="chart-box"><canvas id="chartInc"></canvas></div>
+                <div class="legend-box" id="legInc"></div>
             </div>
         </div>
     </div>
 
-    <div id="view-admin" class="viewport">
-        <div class="card" style="max-width:500px; margin:auto;">
-            <div class="card-h">Administración</div>
-            <div style="padding:20px;">
-                <h4 style="margin:0 0 10px 0;">Copiar Mes</h4>
+    <div id="v-admin" class="view">
+        <div class="an-panel" style="max-width:400px; margin:auto;">
+            <h3>Administración</h3>
+            <div class="inp-row">
+                <label class="lbl">Copiar mes anterior o específico:</label>
                 <div style="display:flex; gap:10px;">
-                    <input type="month" id="cloneSourcePicker" class="inp">
-                    <button onclick="cloneMonth()" style="background:var(--primary); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Copiar</button>
+                    <input type="month" id="cloneSrc" class="inp">
+                    <button onclick="cloneMonth()" style="background:var(--txt); color:white; border:none; border-radius:6px; padding:0 15px; cursor:pointer;">Copiar</button>
                 </div>
-                <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
-                <button onclick="clearMonth()" style="width:100%; background:var(--exp); color:white; padding:12px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">BORRAR MES ACTUAL</button>
             </div>
+            <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+            <button onclick="clearMonth()" style="width:100%; background:var(--exp); color:white; padding:12px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">BORRAR MES ACTUAL</button>
         </div>
     </div>
 
@@ -243,51 +202,44 @@
     <div class="modal" onclick="event.stopPropagation()">
         <form id="txForm">
             <div class="m-head">
-                <span id="modalTitle">Nuevo Movimiento</span>
+                <span id="modalTitle">Nuevo</span>
                 <i class="fas fa-times" onclick="closeModal()" style="cursor:pointer; color:var(--txt-sec)"></i>
             </div>
             <div class="m-body">
-                <div class="btn-toggle-grp">
-                    <button type="button" class="btn-toggle active inc" id="btnTypeInc" onclick="setType('inc')">Ingreso</button>
-                    <button type="button" class="btn-toggle" id="btnTypeExp" onclick="setType('exp')">Gasto</button>
+                <div class="type-sw">
+                    <button type="button" class="ts-btn active exp" id="btnExp" onclick="setType('exp')">Gasto</button>
+                    <button type="button" class="ts-btn" id="btnInc" onclick="setType('inc')">Ingreso</button>
                 </div>
-                <input type="hidden" id="fType" value="inc">
+                <input type="hidden" id="fType" value="exp">
 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
-                    <div>
-                        <label class="inp-lbl">Monto</label>
-                        <input type="number" id="fAmount" class="inp num" step="0.01" placeholder="$0.00" required>
-                    </div>
-                    <div>
-                        <label class="inp-lbl">Fecha</label>
-                        <input type="date" id="fDate" class="inp" required>
-                    </div>
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <div style="flex:1"><label class="lbl">Monto</label><input type="number" id="fAmt" class="inp num" step="0.01" required></div>
+                    <div style="flex:1"><label class="lbl">Fecha</label><input type="date" id="fDate" class="inp" required></div>
                 </div>
 
-                <div class="inp-grp">
-                    <label class="inp-lbl">Categoría</label>
-                    <div class="chips" id="catChips"></div>
+                <div class="inp-row">
+                    <label class="lbl">Categoría (Selecciona)</label>
+                    <div id="chipContainer" class="chip-area"></div>
                     <input type="hidden" id="fCat" required>
                 </div>
 
-                <div class="inp-grp">
-                    <label class="inp-lbl">Concepto</label>
-                    <input type="text" id="fDesc" class="inp" list="conceptList" required placeholder="Ej: Supermercado...">
-                    <datalist id="conceptList"></datalist>
+                <div class="inp-row">
+                    <label class="lbl">Concepto</label>
+                    <input type="text" id="fDesc" class="inp" list="dlConcepts" required>
+                    <datalist id="dlConcepts"></datalist>
                 </div>
 
-                <div class="inp-grp" id="linkGroup" style="display:none;">
-                    <label class="inp-lbl">Fuente de Pago (Opcional)</label>
+                <div class="inp-row" id="linkRow">
+                    <label class="lbl">Asignar a Ingreso (Opcional)</label>
                     <select id="fLink" class="inp"></select>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-                    <input type="checkbox" id="fExec" style="width:16px; height:16px;">
-                    <label for="fExec" style="font-size:12px; font-weight:500;">Ya ejecutado (pagado/cobrado)</label>
+                    <input type="checkbox" id="fExec"> <label for="fExec" style="font-size:12px;">Ejecutado</label>
                 </div>
 
-                <button type="submit" style="width:100%; background:var(--txt-main); color:white; padding:12px; border:none; border-radius:6px; font-weight:700; cursor:pointer;">Guardar</button>
-                <button type="button" id="btnDel" onclick="delTx()" style="width:100%; background:transparent; color:var(--exp); padding:8px; border:none; cursor:pointer; margin-top:8px; display:none;">Eliminar</button>
+                <button type="submit" style="width:100%; background:var(--primary); color:white; padding:12px; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Guardar</button>
+                <button type="button" id="btnDel" onclick="delTx()" style="display:none; width:100%; color:var(--exp); background:none; border:none; padding:10px; margin-top:5px; cursor:pointer;">Eliminar</button>
             </div>
         </form>
     </div>
@@ -296,30 +248,30 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxEni9GJ4gxmbhmNsbzoYxS_SfhcorqsXj4zh93-qWIy5i2R4jwvgJ8L25GcU3h3Bkh/exec";
     const MONTHS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-    const COLORS = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#84CC16'];
+    const PALETTE = ['#4F46E5','#EC4899','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#84CC16'];
 
     let appData = { txs: [], cats: { exp:[], inc:[] }, concepts: {}, rates: {} };
     let currentDate = new Date(); currentDate.setDate(1);
-    let editId = null, chartInstance = null, drillCat = null;
+    let editId = null, chartExp = null, chartInc = null, drillCat = null;
     const fmt = (n) => n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
     window.onload = () => { updateDateUI(); forceSync(); };
 
     async function forceSync() {
-        document.getElementById('loader').style.display = 'flex';
+        document.getElementById('loader').style.display='flex';
         try {
             const r = await fetch(API_URL); appData = await r.json();
-            if(!appData.rates) appData.rates = {}; 
+            if(!appData.rates) appData.rates = {};
             loadMonthData();
-        } catch(e) { console.error(e); alert("Error de conexión"); }
-        document.getElementById('loader').style.display = 'none';
+        } catch(e) { alert("Error sync"); }
+        document.getElementById('loader').style.display='none';
     }
 
     async function saveData() {
-        document.getElementById('loader').style.display = 'flex';
+        document.getElementById('loader').style.display='flex';
         try { await fetch(API_URL, { method: 'POST', body: JSON.stringify(appData) }); loadMonthData(); } 
-        catch(e){ alert('Error al guardar'); }
-        document.getElementById('loader').style.display = 'none';
+        catch(e){ alert('Error save'); }
+        document.getElementById('loader').style.display='none';
     }
 
     function loadMonthData() {
@@ -330,93 +282,109 @@
         const txs = appData.txs.filter(t => !t.deletedAt && parseInt(t.date.split('-')[0]) === y && parseInt(t.date.split('-')[1]) === m);
         txs.sort((a,b) => a.date.localeCompare(b.date) || a.id - b.id);
 
-        renderLists(txs);
+        renderLedger(txs);
+        renderAnalysis(txs);
         calcKPI(txs, document.getElementById('usdRate').value);
-        renderAlloc(txs);
-        renderChart(txs);
     }
 
-    function renderLists(txs) {
+    // --- TAB 1: LEDGER (CUENTA T) ---
+    function renderLedger(txs) {
         const lI = document.getElementById('list-inc'), lE = document.getElementById('list-exp');
         lI.innerHTML=''; lE.innerHTML=''; let rb = 0;
 
         txs.forEach(t => {
             if(t.type=='inc') rb += t.amount; else rb -= t.amount;
+            const row = document.createElement('div');
+            row.className = `tx-row ${t.exec?'done':''}`;
+            row.onclick = () => editTx(t.id);
             
-            const div = document.createElement('div');
-            div.className = `tx-row ${t.exec ? 'executed' : ''}`;
-            div.onclick = () => editTx(t.id);
-
-            let meta = `<span class="tag">${t.cat}</span> <span>${t.date.split('-')[2]}</span>`;
+            let extra = '';
             if(t.type=='exp' && t.linkId) {
                 const src = appData.txs.find(x=>x.id==t.linkId);
-                if(src) meta += `<span class="link-badge"><i class="fas fa-link" style="font-size:9px;"></i> ${src.desc.substring(0,6)}..</span>`;
+                if(src) extra = `<i class="fas fa-link" style="font-size:9px; color:var(--primary)"></i> ${src.desc.substring(0,8)}`;
             }
 
-            div.innerHTML = `
+            row.innerHTML = `
                 <div>
-                    <div class="tx-main">${t.desc}</div>
-                    <div class="tx-sub">${meta}</div>
+                    <div class="tx-d">${t.desc}</div>
+                    <div class="tx-m"><span class="pill">${t.cat}</span> <span>${t.date.split('-')[2]}</span> ${extra}</div>
                 </div>
                 <div style="text-align:right">
                     <div class="num" style="color:var(--${t.type})">$${fmt(t.amount)}</div>
-                    ${t.type=='exp' ? `<div style="font-size:9px; color:${rb>=0?'var(--inc)':'var(--exp)'}">Q: $${fmt(rb)}</div>` : ''}
+                    ${t.type=='exp' ? `<div style="font-size:9px; color:${rb>=0?'var(--inc)':'var(--exp)'}">Q: $${fmt(rb)}</div>`:''}
                 </div>
             `;
-            (t.type=='inc' ? lI : lE).appendChild(div);
+            (t.type=='inc' ? lI : lE).appendChild(row);
         });
-        document.getElementById('cnt-inc').innerText = txs.filter(t=>t.type=='inc').length;
-        document.getElementById('cnt-exp').innerText = txs.filter(t=>t.type=='exp').length;
+        document.getElementById('c-inc').innerText = txs.filter(t=>t.type=='inc').length;
+        document.getElementById('c-exp').innerText = txs.filter(t=>t.type=='exp').length;
     }
 
-    // NEW COMPACT ALLOCATIONS
-    function renderAlloc(txs) {
+    // --- TAB 2: ANALYSIS (CHARTS & ALLOC) ---
+    function renderAnalysis(txs) {
+        // 1. ALLOCATIONS
         const c = document.getElementById('allocList'); c.innerHTML='';
         const incs = txs.filter(t=>t.type=='inc');
-
-        if(incs.length === 0) return c.innerHTML = '<div style="padding:15px; color:#9CA3AF; text-align:center;">Sin ingresos</div>';
-
+        if(!incs.length) c.innerHTML = '<div style="padding:10px; color:#999;">Sin ingresos</div>';
+        
         incs.forEach(inc => {
             const subs = txs.filter(t=>t.type=='exp' && t.linkId==inc.id);
             const spent = subs.reduce((a,b)=>a+b.amount,0);
             const rem = inc.amount - spent;
             const pct = Math.min(100, (spent/inc.amount)*100);
-            const color = rem < 0 ? 'var(--exp)' : (pct > 90 ? '#F59E0B' : 'var(--inc)');
-
-            let rows = '';
-            subs.forEach(s => rows += `<div class="ai-subrow ${s.exec?'executed':''}" onclick="editTx(${s.id})"><span>${s.desc}</span><span class="num">$${fmt(s.amount)}</span></div>`);
+            const color = rem < 0 ? 'var(--exp)' : 'var(--inc)';
+            
+            let det = '';
+            subs.forEach(s => det += `<div style="display:flex; justify-content:space-between; font-size:10px; padding:4px 0;"><span>${s.desc}</span><span>$${fmt(s.amount)}</span></div>`);
 
             c.innerHTML += `
-                <div class="alloc-item">
-                    <div class="ai-head" onclick="this.parentElement.classList.toggle('open')">
-                        <div class="ai-info">
-                            <div style="display:flex; justify-content:space-between; font-weight:600; font-size:12px;">
+                <div class="al-row">
+                    <div class="al-h" onclick="this.parentElement.classList.toggle('open')">
+                        <div style="flex:1">
+                            <div style="display:flex; justify-content:space-between;">
                                 <span>${inc.desc}</span>
                                 <span class="num" style="color:${color}">R: $${fmt(rem)}</span>
                             </div>
-                            <div class="ai-bar-bg"><div class="ai-bar-fill" style="width:${pct}%; background:${color}"></div></div>
+                            <div class="al-bar"><div class="al-fill" style="width:${pct}%; background:${color}"></div></div>
                         </div>
-                        <i class="fas fa-chevron-down" style="font-size:10px; color:#9CA3AF; margin-left:10px;"></i>
                     </div>
-                    <div class="ai-body">${rows || '<div style="padding:6px 14px; font-size:10px; color:#9CA3AF;">Sin gastos asignados</div>'}</div>
+                    <div class="al-det">${det || '<small>Sin gastos asignados</small>'}</div>
                 </div>
             `;
         });
+
+        // 2. CHART EXPENSES (By Category)
+        renderChart(
+            document.getElementById('chartExp').getContext('2d'), 
+            document.getElementById('legExp'), 
+            txs.filter(t=>t.type=='exp'), 
+            'cat', 
+            true
+        );
+
+        // 3. CHART INCOMES (By Concept - Requested)
+        renderChart(
+            document.getElementById('chartInc').getContext('2d'), 
+            document.getElementById('legInc'), 
+            txs.filter(t=>t.type=='inc'), 
+            'desc', 
+            false // No drilldown for income concepts
+        );
     }
 
-    function renderChart(txs) {
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        if(chartInstance) chartInstance.destroy();
-        
-        const subset = txs.filter(t=>t.type=='exp');
+    function renderChart(ctx, legContainer, dataSet, groupKey, allowDrill) {
+        // Destroy old if exists logic handled by simple tracking vars? No, simplistic here:
+        // Note: In a robust app we'd map canvas ID to instance. 
+        // For V6 simplistic, I'll clear canvas roughly by re-assigning parent innerHTML if needed, 
+        // but Chart.js needs explicit destroy. Let's do a quick hack for the two specific charts:
+        if(groupKey == 'cat' && chartExp) chartExp.destroy();
+        if(groupKey == 'desc' && chartInc) chartInc.destroy();
+
         let map = {};
-        
-        if(drillCat) {
-            subset.filter(t=>t.cat==drillCat).forEach(t=>map[t.desc]=(map[t.desc]||0)+t.amount);
-            document.getElementById('btnResetChart').style.display='inline';
+        if(allowDrill && drillCat) {
+            dataSet.filter(t=>t.cat==drillCat).forEach(t=>map[t.desc] = (map[t.desc]||0)+t.amount);
         } else {
-            subset.forEach(t=>map[t.cat]=(map[t.cat]||0)+t.amount);
-            document.getElementById('btnResetChart').style.display='none';
+            dataSet.forEach(t=>map[t[groupKey]] = (map[t[groupKey]]||0)+t.amount);
         }
 
         const entries = Object.entries(map).sort((a,b)=>b[1]-a[1]);
@@ -424,67 +392,78 @@
         const data = entries.map(e=>e[1]);
         const total = data.reduce((a,b)=>a+b,0);
 
-        chartInstance = new Chart(ctx, {
+        const config = {
             type: 'doughnut',
-            data: { labels, datasets: [{ data, backgroundColor: COLORS, borderWidth:0 }] },
+            data: { labels, datasets: [{ data, backgroundColor: PALETTE, borderWidth:0 }] },
             options: { 
-                responsive: true, maintainAspectRatio: false, cutout: '75%', 
+                responsive: true, maintainAspectRatio: false, cutout: '70%', 
                 plugins: { legend: { display: false } },
-                onClick: (e,el) => { if(!drillCat && el.length) { drillCat=labels[el[0].index]; renderChart(txs); }}
+                onClick: (e,el) => { if(allowDrill && !drillCat && el.length) { drillCat=labels[el[0].index]; loadMonthData(); }}
             }
-        });
+        };
 
-        const leg = document.getElementById('chartLegend'); leg.innerHTML='';
+        const inst = new Chart(ctx, config);
+        if(groupKey == 'cat') chartExp = inst; else chartInc = inst;
+
+        // LEGEND WITH AMOUNTS
+        legContainer.innerHTML = '';
         entries.forEach((e,i) => {
             const pct = total>0 ? Math.round((e[1]/total)*100) : 0;
-            leg.innerHTML += `<div class="l-item" onclick="if(!drillCat){drillCat='${e[0]}';renderChart(txs);}"><span style="width:6px;height:6px;border-radius:50%;background:${COLORS[i%COLORS.length]}"></span><b>${e[0]}</b> ${pct}%</div>`;
+            legContainer.innerHTML += `
+                <div class="l-item" onclick="${allowDrill && !drillCat ? `drillCat='${e[0]}';loadMonthData()` : ''}">
+                    <div class="l-color" style="background:${PALETTE[i%PALETTE.length]}"></div>
+                    <b>${e[0]}</b>
+                    <span style="color:#64748B">$${fmt(e[1])} (${pct}%)</span>
+                </div>
+            `;
         });
     }
-    
-    function resetChart(){ drillCat=null; loadMonthData(); }
 
-    // MODAL
-    function openModal(){ editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
-    function closeModal(e){ if(!e || e.target.id == 'modalOverlay' || e.target.tagName == 'I') document.getElementById('modalOverlay').classList.remove('open'); }
-    
-    function setType(t){
+    function resetCharts() { drillCat = null; loadMonthData(); }
+
+    // --- MODAL & CHIPS ---
+    function openModal() { editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
+    function closeModal(e) { if(!e || e.target.id=='modalOverlay' || e.target.tagName=='I') document.getElementById('modalOverlay').classList.remove('open'); }
+
+    function setType(t) {
         document.getElementById('fType').value = t;
-        document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
-        document.getElementById(t=='inc'?'btnTypeInc':'btnTypeExp').classList.add('active');
+        document.getElementById('btnExp').className = `ts-btn ${t=='exp'?'active exp':''}`;
+        document.getElementById('btnInc').className = `ts-btn ${t=='inc'?'active inc':''}`;
         
-        // Chips
-        const con = document.getElementById('catChips'); con.innerHTML='';
+        // CHIPS GENERATION
+        const chipBox = document.getElementById('chipContainer'); chipBox.innerHTML='';
         (appData.cats[t]||[]).forEach(c => {
-            const el=document.createElement('div'); el.className='chip'; el.innerText=c;
-            el.onclick=()=>selectCat(c, el); con.appendChild(el);
+            const el = document.createElement('div'); el.className='chip'; el.innerText=c;
+            el.onclick = () => selectCat(c, el);
+            chipBox.appendChild(el);
         });
-        const add=document.createElement('div'); add.className='chip'; add.innerText='+'; 
-        add.style.borderStyle='dashed';
-        add.onclick=()=>{ const n=prompt('Nueva:'); if(n){ if(!appData.cats[t])appData.cats[t]=[]; appData.cats[t].push(n); saveData(); setType(t); }};
-        con.appendChild(add);
+        // Add new
+        const add = document.createElement('div'); add.className='chip add'; add.innerText='+';
+        add.onclick = () => { const n=prompt('Nueva Categoría'); if(n){ if(!appData.cats[t]) appData.cats[t]=[]; appData.cats[t].push(n); saveData(); setType(t); }};
+        chipBox.appendChild(add);
 
-        document.getElementById('linkGroup').style.display = t=='exp'?'block':'none';
+        document.getElementById('linkRow').style.display = t=='exp'?'block':'none';
         if(t=='exp') renderLinkOpts();
-        selectCat('');
         
-        // Datalist concepts
-        const dl = document.getElementById('conceptList'); dl.innerHTML='';
+        // Datalist
+        const dl = document.getElementById('dlConcepts'); dl.innerHTML='';
         Object.values(appData.concepts).flat().forEach(c => dl.appendChild(new Option(c)));
+        
+        document.getElementById('fCat').value = ''; // Reset selection
     }
 
     function selectCat(cat, el) {
         document.getElementById('fCat').value = cat;
-        document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         if(el) el.classList.add('active');
     }
 
-    function renderLinkOpts(selId){
+    function renderLinkOpts(selId) {
         const s = document.getElementById('fLink'); s.innerHTML='<option value="">-- Sin Asignar --</option>';
         const y=currentDate.getFullYear(), m=currentDate.getMonth()+1;
-        appData.txs.filter(t=>!t.deletedAt && t.type=='inc' && parseInt(t.date.split('-')[1])==m).forEach(inc => {
-            const spent = appData.txs.filter(t=>!t.deletedAt && t.type=='exp' && t.linkId==inc.id && t.id!=editId).reduce((a,b)=>a+b.amount,0);
-            const left = inc.amount - spent;
-            s.add(new Option(`${inc.desc} (Disp: $${fmt(left)})`, inc.id));
+        appData.txs.filter(t=>!t.deletedAt && t.type=='inc' && parseInt(t.date.split('-')[1])==m).forEach(i => {
+             const spent = appData.txs.filter(x=>!x.deletedAt && x.type=='exp' && x.linkId==i.id && x.id!=editId).reduce((a,b)=>a+b.amount,0);
+             s.add(new Option(`${i.desc} (Disp: $${fmt(i.amount-spent)})`, i.id));
         });
         if(selId) s.value = selId;
     }
@@ -494,25 +473,25 @@
         const cat = document.getElementById('fCat').value;
         const desc = document.getElementById('fDesc').value;
         if(!cat) return alert("Selecciona Categoría");
-
+        
         const tx = {
             id: editId || Date.now(),
             date: document.getElementById('fDate').value,
-            amount: parseFloat(document.getElementById('fAmount').value),
+            amount: parseFloat(document.getElementById('fAmt').value),
             type: document.getElementById('fType').value,
             cat, desc,
             exec: document.getElementById('fExec').checked,
-            linkId: document.getElementById('fType').value=='exp' ? document.getElementById('fLink').value : null,
+            linkId: document.getElementById('fType').value=='exp'?document.getElementById('fLink').value:null,
             deletedAt: null
         };
         
         if(!appData.concepts[cat]) appData.concepts[cat]=[];
         if(!appData.concepts[cat].includes(desc)) appData.concepts[cat].push(desc);
 
-        if(editId) { const i=appData.txs.findIndex(x=>x.id==editId); if(i>-1)appData.txs[i]=tx; }
+        if(editId) { const i=appData.txs.findIndex(x=>x.id==editId); appData.txs[i]=tx; }
         else appData.txs.push(tx);
-        
-        saveData(); document.getElementById('modalOverlay').classList.remove('open');
+
+        saveData(); closeModal({target:document.getElementById('modalOverlay')});
     }
 
     function editTx(id) {
@@ -520,61 +499,62 @@
         editId = id;
         document.getElementById('modalTitle').innerText = 'Editar';
         document.getElementById('btnDel').style.display='block';
-        document.getElementById('fAmount').value = t.amount;
+        document.getElementById('fAmt').value = t.amount;
         document.getElementById('fDate').value = t.date;
         document.getElementById('fDesc').value = t.desc;
         document.getElementById('fExec').checked = t.exec;
-        
-        setType(t.type);
-        // Find chip
-        const chips = document.querySelectorAll('.chip');
-        for(let c of chips) if(c.innerText == t.cat) { c.classList.add('active'); document.getElementById('fCat').value = t.cat; break; }
 
+        setType(t.type);
+        // Activate chip
+        const chips = document.querySelectorAll('.chip');
+        for(let c of chips) if(c.innerText == t.cat) { selectCat(t.cat, c); break; }
+        
         if(t.type=='exp') renderLinkOpts(t.linkId);
         document.getElementById('modalOverlay').classList.add('open');
     }
 
-    function resetForm() {
+    function resetForm(){
         document.getElementById('txForm').reset();
         document.getElementById('modalTitle').innerText='Nuevo';
         document.getElementById('btnDel').style.display='none';
         document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('fCat').value='';
     }
 
-    function cloneMonth() {
-        const s = document.getElementById('cloneSourcePicker').value; if(!s) return alert("Selecciona mes origen");
-        if(!confirm("¿Copiar estructura?")) return;
-        const [sy, sm] = s.split('-').map(Number);
-        const source = appData.txs.filter(t=>!t.deletedAt && parseInt(t.date.split('-')[0])==sy && parseInt(t.date.split('-')[1])==sm);
-        if(!source.length) return alert("Mes origen vacío");
-        
-        const targetDate = document.getElementById('datePicker').value + '-01';
-        let idMap = {}, newTxs = [];
-        
-        source.filter(t=>t.type=='inc').forEach(t=>{ const nid=Date.now()+Math.random(); idMap[t.id]=nid; newTxs.push({...t, id:nid, date:targetDate, exec:false}); });
-        source.filter(t=>t.type=='exp').forEach(t=>{ const nid=Date.now()+Math.random(); newTxs.push({...t, id:nid, date:targetDate, exec:false, linkId:t.linkId?idMap[t.linkId]:null}); });
-        
-        appData.txs.push(...newTxs); saveData();
-    }
-
+    // UTILS
     function calcKPI(txs, tc) {
         const i=txs.filter(t=>t.type=='inc').reduce((a,b)=>a+b.amount,0);
         const e=txs.filter(t=>t.type=='exp').reduce((a,b)=>a+b.amount,0);
         const b=i-e;
-        document.getElementById('sum-inc').innerText='$'+fmt(i);
-        document.getElementById('sum-exp').innerText='$'+fmt(e);
-        document.getElementById('kpiBal').innerText='$'+fmt(b);
-        document.getElementById('kpiUsd').innerText='USD '+fmt(b/tc);
+        document.getElementById('k-inc').innerText='$'+fmt(i);
+        document.getElementById('k-exp').innerText='$'+fmt(e);
+        document.getElementById('k-bal').innerText='$'+fmt(b);
+        document.getElementById('k-usd').innerText='USD '+fmt(b/tc);
     }
 
     function changeMonth(d){ currentDate.setMonth(currentDate.getMonth()+d); updateDateUI(); loadMonthData(); }
     function manualDate(){ const[y,m]=document.getElementById('datePicker').value.split('-'); currentDate.setFullYear(y); currentDate.setMonth(m-1); updateDateUI(); loadMonthData(); }
     function updateDateUI(){ document.getElementById('monthTxt').innerText=`${MONTHS[currentDate.getMonth()]} ${currentDate.getFullYear()}`; document.getElementById('datePicker').value=`${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2,'0')}`; }
     function updateMonthTC() { appData.rates[`${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2,'0')}`]=document.getElementById('usdRate').value; saveData(); }
-    function delTx(){ if(confirm('Eliminar?')){ appData.txs.find(x=>x.id==editId).deletedAt=Date.now(); saveData(); document.getElementById('modalOverlay').classList.remove('open'); }}
+    function delTx(){ if(confirm('Eliminar?')){ appData.txs.find(x=>x.id==editId).deletedAt=Date.now(); saveData(); closeModal({target:document.getElementById('modalOverlay')}); }}
     function clearMonth(){ if(confirm('¿BORRAR TODO?')){ const y=currentDate.getFullYear(), m=currentDate.getMonth()+1; appData.txs.forEach(t=>{if(parseInt(t.date.split('-')[0])==y && parseInt(t.date.split('-')[1])==m) t.deletedAt=Date.now();}); saveData(); }}
-    function nav(v){ document.querySelectorAll('.viewport').forEach(x=>x.classList.remove('active')); document.getElementById(`view-${v}`).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); event.currentTarget.classList.add('active'); }
+    function cloneMonth() { 
+        const s = document.getElementById('cloneSrc').value; if(!s) return alert("Selecciona mes");
+        if(!confirm("¿Copiar?")) return;
+        const [sy, sm] = s.split('-').map(Number);
+        const source = appData.txs.filter(t=>!t.deletedAt && parseInt(t.date.split('-')[0])==sy && parseInt(t.date.split('-')[1])==sm);
+        const targetDate = document.getElementById('datePicker').value + '-01';
+        let idMap={}, newTxs=[];
+        source.filter(t=>t.type=='inc').forEach(t=>{const nid=Date.now()+Math.random(); idMap[t.id]=nid; newTxs.push({...t, id:nid, date:targetDate, exec:false});});
+        source.filter(t=>t.type=='exp').forEach(t=>{const nid=Date.now()+Math.random(); newTxs.push({...t, id:nid, date:targetDate, exec:false, linkId:t.linkId?idMap[t.linkId]:null});});
+        appData.txs.push(...newTxs); saveData();
+    }
+    
+    function nav(v) {
+        document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+        document.getElementById(`v-${v}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
 </script>
 </body>
 </html>
