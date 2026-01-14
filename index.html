@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finance OS - V17 Clone Feature</title>
+    <title>Finance OS - V18 Compact UI</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -146,42 +146,59 @@
         .cl-amt { font-weight: 700; color: var(--txt-main); display: block; line-height: 1.1; }
         .cl-pct { font-size: 9px; color: var(--txt-sec); font-weight: 500; }
 
-        /* --- MODAL --- */
+        /* --- MODAL OPTIMIZED --- */
         .fab { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; background: var(--primary); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 12px rgba(94, 129, 172, 0.4); cursor: pointer; border: none; transition: 0.2s; z-index: 100; }
         .fab:hover { transform: translateY(-2px); background: #4C566A; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(46, 52, 64, 0.5); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
-        .modal { background: white; width: 420px; border-radius: 10px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; animation: fadeUp 0.2s ease-out; }
+        
+        /* MODAL HEIGHT FIX & SCROLL */
+        .modal { 
+            background: white; 
+            width: 380px; 
+            max-height: 95vh; /* Limite de altura */
+            border-radius: 10px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+            display: flex; /* Para controlar header/body */
+            flex-direction: column;
+            animation: fadeUp 0.2s ease-out; 
+        }
         @keyframes fadeUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .m-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; }
+        .m-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; flex-shrink: 0; }
         .m-title { font-weight: 700; font-size: 13px; color: var(--txt-main); }
-        .m-body { padding: 20px; }
+        
+        /* SCROLLABLE BODY */
+        .m-body { 
+            padding: 16px; 
+            overflow-y: auto; /* Scroll si es necesario */
+            flex: 1;
+        }
 
-        /* FORM STYLES */
-        .type-selector { display: flex; background: #F1F5F9; padding: 3px; border-radius: 6px; margin-bottom: 16px; }
-        .ts-btn { flex: 1; border: none; padding: 8px; border-radius: 5px; font-weight: 600; font-size: 11px; color: var(--txt-sec); cursor: pointer; background: transparent; transition: 0.2s; }
+        /* FORM STYLES COMPACT */
+        .type-selector { display: flex; background: #F1F5F9; padding: 2px; border-radius: 6px; margin-bottom: 12px; }
+        .ts-btn { flex: 1; border: none; padding: 6px; border-radius: 5px; font-weight: 600; font-size: 11px; color: var(--txt-sec); cursor: pointer; background: transparent; transition: 0.2s; }
         .ts-btn.active { background: white; color: var(--txt-main); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .ts-btn.active.inc { color: var(--success); }
         .ts-btn.active.exp { color: var(--danger); }
 
-        .f-group { margin-bottom: 14px; }
-        .f-label { display: block; font-size: 10px; font-weight: 700; color: var(--txt-sec); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .f-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 12px; transition: 0.2s; background: #FAFAFA; color: var(--txt-main); }
+        .f-group { margin-bottom: 10px; } /* Menos margen */
+        .f-label { display: block; font-size: 9px; font-weight: 700; color: var(--txt-sec); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .f-input { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 12px; transition: 0.2s; background: #FAFAFA; color: var(--txt-main); height: 30px; }
         .f-input:focus { border-color: var(--primary); background: white; }
         
-        .chips-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-        .chip { padding: 5px 10px; border-radius: 4px; border: 1px solid var(--border); background: white; font-size: 11px; font-weight: 500; color: var(--txt-sec); cursor: pointer; transition: 0.1s; }
+        .chips-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .chip { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: white; font-size: 10px; font-weight: 500; color: var(--txt-sec); cursor: pointer; transition: 0.1s; }
         .chip:hover { border-color: var(--txt-sec); }
         .chip.active { background: var(--sidebar); color: white; border-color: var(--sidebar); }
         
         /* New Sub-Chip for Concepts */
-        .sub-chip { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: #F8FAFC; font-size: 10px; font-weight: 500; color: var(--txt-main); cursor: pointer; transition: 0.1s; }
+        .sub-chip { padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); background: #F8FAFC; font-size: 10px; font-weight: 500; color: var(--txt-main); cursor: pointer; transition: 0.1s; }
         .sub-chip:hover { border-color: var(--primary); color: var(--primary); }
         .sub-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .btn-primary { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+        .btn-primary { width: 100%; background: var(--primary); color: white; padding: 10px; border: none; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
         .btn-primary:hover { background: #4C566A; }
 
         @media (max-width: 1000px) {
@@ -335,7 +352,7 @@
             </div>
             <input type="hidden" id="fType" value="exp">
 
-            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:12px;">
+            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px;">
                 <div>
                     <label class="f-label">Monto</label>
                     <input type="number" id="fAmt" class="f-input num" step="0.01" required placeholder="$0.00">
@@ -354,7 +371,7 @@
 
             <div class="f-group">
                 <label class="f-label" id="lblDesc">Concepto / Subcategoría</label>
-                <div class="chips-container" id="conceptBox" style="margin-bottom:8px;"></div>
+                <div class="chips-container" id="conceptBox" style="margin-bottom:6px;"></div>
                 <input type="text" id="fDesc" class="f-input" required placeholder="Selecciona o escribe nuevo...">
             </div>
 
@@ -363,19 +380,19 @@
                 <select id="fLink" class="f-input"></select>
             </div>
 
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-                <input type="checkbox" id="fExec" style="width:16px; height:16px; accent-color:var(--primary);">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:15px; margin-top:5px;">
+                <input type="checkbox" id="fExec" style="width:14px; height:14px; accent-color:var(--primary);">
                 <label for="fExec" style="font-weight:500; font-size:11px;">Marcar como Ejecutado</label>
             </div>
 
             <button type="submit" class="btn-primary">GUARDAR</button>
-            <button type="button" id="btnDel" onclick="delTx()" style="background:transparent; color:var(--danger); border:none; width:100%; margin-top:12px; cursor:pointer; font-weight:600; display:none; font-size:11px;">Eliminar Registro</button>
+            <button type="button" id="btnDel" onclick="delTx()" style="background:transparent; color:var(--danger); border:none; width:100%; margin-top:8px; cursor:pointer; font-weight:600; display:none; font-size:10px;">Eliminar Registro</button>
             
-            <div id="cloneArea" style="display:none; margin-top:15px; padding-top:15px; border-top:1px dashed #E2E8F0;">
-                <div style="font-size:10px; font-weight:700; color:#94A3B8; margin-bottom:6px; text-transform:uppercase;">Duplicar este movimiento</div>
+            <div id="cloneArea" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed #E2E8F0;">
+                <div style="font-size:9px; font-weight:700; color:#94A3B8; margin-bottom:4px; text-transform:uppercase;">Duplicar este movimiento</div>
                 <div style="display:flex; gap:8px;">
-                    <input type="month" id="fCloneMonth" class="f-input" style="padding:6px;">
-                    <button type="button" onclick="doClone()" style="background:#3B4252; color:white; border:none; border-radius:6px; padding:0 16px; font-size:11px; font-weight:600; cursor:pointer;">Clonar</button>
+                    <input type="month" id="fCloneMonth" class="f-input" style="padding:4px;">
+                    <button type="button" onclick="doClone()" style="background:#3B4252; color:white; border:none; border-radius:6px; padding:0 12px; font-size:10px; font-weight:600; cursor:pointer;">Clonar</button>
                 </div>
             </div>
 
@@ -537,7 +554,7 @@
     
     function resetCharts() { drillCat=null; loadMonthData(); }
 
-    /* --- FORM & LOGIC UPDATED --- */
+    /* --- FORM & LOGIC --- */
     function openModal(){ editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
     function closeModal(e){ if(!e || e.target.id=='modalOverlay' || e.target.tagName=='I') document.getElementById('modalOverlay').classList.remove('open'); }
     
