@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finance OS - V15 Scroll Fix</title>
+    <title>Finance OS - Nordic Final</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -65,7 +65,7 @@
         .page-title { font-weight: 700; font-size: 14px; color: var(--txt-main); }
         .controls { display: flex; align-items: center; gap: 12px; }
         
-        /* TC CONTROL FIX */
+        /* TC CONTROL */
         .tc-ctrl { display: flex; align-items: center; gap: 8px; background: var(--bg-app); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); height: 28px; }
         .tc-label { font-size: 11px; font-weight: 600; color: var(--txt-sec); white-space: nowrap; }
         .tc-input { width: 50px; border: none; background: transparent; font-weight: 700; color: var(--txt-main); font-family: inherit; font-size: 12px; outline: none; }
@@ -92,6 +92,7 @@
         .ph-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; }
         .panel-body { flex: 1; overflow-y: auto; padding: 0; }
 
+        /* LIST ITEMS - ULTRA COMPACT */
         .tx-row { padding: 8px 16px; border-bottom: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center; transition: 0.1s; cursor: pointer; height: 48px; }
         .tx-row:hover { background: #F8FAFC; }
         .tx-row.executed { opacity: 0.5; filter: grayscale(1); }
@@ -100,6 +101,9 @@
         .tx-desc { font-weight: 600; font-size: 12px; color: var(--txt-main); }
         .tx-meta { font-size: 10px; color: var(--txt-sec); display: flex; align-items: center; gap: 6px; }
         .badge { padding: 1px 5px; border-radius: 3px; font-size: 9px; font-weight: 600; background: #F1F5F9; color: var(--txt-sec); border: 1px solid var(--border); }
+        
+        /* LINK TAG DISCRETO */
+        .link-tag { font-size: 8px; color: var(--primary); font-weight: 500; opacity: 0.9; display:flex; align-items:center; gap:3px; background:#F0F4F8; padding:1px 4px; border-radius:3px; }
 
         .tx-amt { text-align: right; }
         .tx-val { font-size: 12px; font-weight: 600; }
@@ -113,7 +117,7 @@
         .ai-details { margin-top: 8px; padding: 8px; background: #F8FAFC; border-radius: 6px; display: none; border: 1px dashed var(--border); }
         .alloc-item.open .ai-details { display: block; }
         
-        /* CHART VIEW - FIX SCROLL */
+        /* CHART VIEW - SCROLL FIX */
         #view-charts { grid-template-columns: 1fr 1fr; grid-template-rows: 320px; gap: 20px; align-content: start; }
         .chart-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; }
         .cc-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; height: 20px; }
@@ -128,10 +132,10 @@
             display: flex; 
             flex-direction: column; 
             gap: 6px; 
-            justify-content: flex-start; /* Alinea items arriba */
-            max-height: 245px; /* Altura maxima calculada */
-            overflow-y: auto; /* Activa scroll vertical */
-            padding-right: 4px; /* Espacio para la barra de scroll */
+            justify-content: flex-start;
+            max-height: 245px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
         .cl-item { display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 4px 6px; border-bottom: 1px solid transparent; cursor: pointer; border-radius: 4px; }
         .cl-item:hover { background: #F8FAFC; }
@@ -384,7 +388,7 @@
             'Esenciales': ['Luz/Gas', 'Supermercado', 'Internet', 'Alquiler'],
             'Deudas': ['Tarjeta Visa', 'Préstamo', 'Tarjeta Master'],
             'Personal': ['Salidas', 'Ropa'],
-            'Ingresos': ['Sueldo', 'Venta', 'Intereses'] // Pseudo-categoria para ingresos
+            'Ingresos': ['Sueldo', 'Venta', 'Intereses']
         }, 
         rates: {} 
     };
@@ -423,13 +427,25 @@
 
         txs.forEach(t => {
             if(t.type=='inc') rb+=t.amount; else rb-=t.amount;
+            
+            // LOGICA DE ETIQUETA VINCULO (Agregada para mantener tu funcionalidad pedida)
+            let linkText = '';
+            if(t.type=='exp' && t.linkId) {
+                const source = appData.txs.find(x => x.id == t.linkId);
+                if(source) linkText = `<span class="link-tag"><i class="fas fa-link" style="font-size:7px;"></i> ${source.desc}</span>`;
+            }
+
             const el = document.createElement('div');
             el.className = `tx-row ${t.exec?'executed':''}`;
             el.onclick = () => editTx(t.id);
             el.innerHTML = `
                 <div class="tx-main">
                     <div class="tx-desc">${t.desc}</div>
-                    <div class="tx-meta"><span class="badge">${t.cat || 'General'}</span> <span>${t.date.split('-')[2]} ${MONTHS[parseInt(t.date.split('-')[1])-1]}</span> ${t.type=='exp'&&t.linkId?'<i class="fas fa-link"></i>':''}</div>
+                    <div class="tx-meta">
+                        <span class="badge">${t.cat || 'General'}</span> 
+                        <span>${t.date.split('-')[2]} ${MONTHS[parseInt(t.date.split('-')[1])-1]}</span> 
+                        ${linkText}
+                    </div>
                 </div>
                 <div class="tx-amt">
                     <div class="tx-val" style="color:var(--${t.type=='inc'?'success':'danger'})">$${fmt(t.amount)}</div>
@@ -516,7 +532,6 @@
     function openModal(){ editId=null; resetForm(); setType('exp'); document.getElementById('modalOverlay').classList.add('open'); }
     function closeModal(e){ if(!e || e.target.id=='modalOverlay' || e.target.tagName=='I') document.getElementById('modalOverlay').classList.remove('open'); }
     
-    // Renderiza botones de concepto segun la categoria seleccionada
     function renderConcepts(catKey) {
         const box = document.getElementById('conceptBox');
         box.innerHTML = '';
@@ -551,11 +566,10 @@
                 const el=document.createElement('div'); el.className='chip'; el.innerText=c;
                 el.onclick=()=>{
                     selectCat(c, el);
-                    renderConcepts(c); // Cargar conceptos de esta categoria
+                    renderConcepts(c); 
                 }; 
                 box.appendChild(el);
             });
-            // Boton + Categoria
             const add=document.createElement('div'); add.className='chip add'; add.innerText='+';
             add.onclick=()=>{const n=prompt('Nueva Categoría'); if(n){ if(!appData.cats.exp)appData.cats.exp=[]; appData.cats.exp.push(n); saveData(); setType('exp'); }};
             box.appendChild(add);
@@ -564,19 +578,16 @@
             renderLinkOpts();
             document.getElementById('lblDesc').innerText = "Concepto / Subcategoría";
             document.getElementById('conceptBox').style.display = 'flex';
-            
-            // Limpiar seleccion actual
             document.getElementById('fCat').value = '';
-            document.getElementById('conceptBox').innerHTML = ''; // Limpia conceptos hasta que elija categoria
+            document.getElementById('conceptBox').innerHTML = ''; 
             
         } else {
-            // MODO INGRESO
             catRow.style.display = 'none';
-            document.getElementById('fCat').value = 'Ingresos'; // Categoria interna
+            document.getElementById('fCat').value = 'Ingresos'; 
             document.getElementById('linkRow').style.display='none';
             document.getElementById('lblDesc').innerText = "Fuente de Ingreso";
             document.getElementById('conceptBox').style.display = 'flex';
-            renderConcepts('Ingresos'); // Cargar conceptos de ingresos
+            renderConcepts('Ingresos'); 
         }
     }
 
@@ -610,7 +621,6 @@
             linkId:type=='exp'?document.getElementById('fLink').value:null, deletedAt:null
         };
         
-        // Guardar nuevo concepto en su categoria correspondiente
         const storeKey = type === 'inc' ? 'Ingresos' : cat;
         if(!appData.concepts[storeKey]) appData.concepts[storeKey] = [];
         if(!appData.concepts[storeKey].includes(desc)) appData.concepts[storeKey].push(desc);
@@ -627,19 +637,15 @@
         setType(t.type); 
         
         if(t.type === 'exp') { 
-            // Seleccionar chip visualmente
             const cs=document.querySelectorAll('.chip'); 
             for(let c of cs) {
                 if(c.innerText==t.cat) {
-                    c.click(); // Esto activa renderConcepts(c) y visual selection
+                    c.click(); 
                     break;
                 }
             }
             renderLinkOpts(t.linkId); 
-        } else {
-            // Si es ingreso, ya se renderizaron los conceptos al hacer setType('inc')
-        }
-        // Seleccionar sub-chip visualmente si existe
+        } 
         setTimeout(() => {
              const scs=document.querySelectorAll('.sub-chip');
              for(let sc of scs) if(sc.innerText==t.desc) sc.classList.add('active');
